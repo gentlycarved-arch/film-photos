@@ -143,49 +143,10 @@
     ]
   },
   {
-    "id": "012",
-    "file": "fig-012.jpg",
-    "roll": "00002124",
-    "frame": "260725000021240012",
-    "width": 3130,
-    "height": 2075,
-    "orientation": "landscape",
-    "categories": [
-      "italy",
-      "landscape"
-    ]
-  },
-  {
     "id": "013",
     "file": "fig-013.jpg",
     "roll": "00002124",
     "frame": "260725000021240013",
-    "width": 3130,
-    "height": 2075,
-    "orientation": "landscape",
-    "categories": [
-      "italy",
-      "landscape"
-    ]
-  },
-  {
-    "id": "014",
-    "file": "fig-014.jpg",
-    "roll": "00002124",
-    "frame": "260725000021240014",
-    "width": 3130,
-    "height": 2075,
-    "orientation": "landscape",
-    "categories": [
-      "italy",
-      "landscape"
-    ]
-  },
-  {
-    "id": "015",
-    "file": "fig-015.jpg",
-    "roll": "00002124",
-    "frame": "260725000021240015",
     "width": 3130,
     "height": 2075,
     "orientation": "landscape",
@@ -251,19 +212,6 @@
     "file": "fig-020.jpg",
     "roll": "00002124",
     "frame": "260725000021240020",
-    "width": 3130,
-    "height": 2075,
-    "orientation": "landscape",
-    "categories": [
-      "italy",
-      "landscape"
-    ]
-  },
-  {
-    "id": "021",
-    "file": "fig-021.jpg",
-    "roll": "00002124",
-    "frame": "260725000021240021",
     "width": 3130,
     "height": 2075,
     "orientation": "landscape",
@@ -767,32 +715,6 @@
     ]
   },
   {
-    "id": "060",
-    "file": "fig-060.jpg",
-    "roll": "00002125",
-    "frame": "260725000021250024",
-    "width": 3130,
-    "height": 2075,
-    "orientation": "landscape",
-    "categories": [
-      "italy",
-      "portrait"
-    ]
-  },
-  {
-    "id": "061",
-    "file": "fig-061.jpg",
-    "roll": "00002125",
-    "frame": "260725000021250025",
-    "width": 3130,
-    "height": 2075,
-    "orientation": "landscape",
-    "categories": [
-      "italy",
-      "portrait"
-    ]
-  },
-  {
     "id": "062",
     "file": "fig-062.jpg",
     "roll": "00002125",
@@ -810,19 +732,6 @@
     "file": "fig-063.jpg",
     "roll": "00002125",
     "frame": "260725000021250027",
-    "width": 3130,
-    "height": 2075,
-    "orientation": "landscape",
-    "categories": [
-      "italy",
-      "landscape"
-    ]
-  },
-  {
-    "id": "064",
-    "file": "fig-064.jpg",
-    "roll": "00002125",
-    "frame": "260725000021250028",
     "width": 3130,
     "height": 2075,
     "orientation": "landscape",
@@ -1213,71 +1122,6 @@
     "file": "fig-094.jpg",
     "roll": "00002126",
     "frame": "260725000021260021",
-    "width": 3130,
-    "height": 2075,
-    "orientation": "landscape",
-    "categories": [
-      "italy",
-      "landscape"
-    ]
-  },
-  {
-    "id": "095",
-    "file": "fig-095.jpg",
-    "roll": "00002126",
-    "frame": "260725000021260022",
-    "width": 3130,
-    "height": 2075,
-    "orientation": "landscape",
-    "categories": [
-      "italy",
-      "landscape"
-    ]
-  },
-  {
-    "id": "096",
-    "file": "fig-096.jpg",
-    "roll": "00002126",
-    "frame": "260725000021260023",
-    "width": 3130,
-    "height": 2075,
-    "orientation": "landscape",
-    "categories": [
-      "italy",
-      "landscape"
-    ]
-  },
-  {
-    "id": "097",
-    "file": "fig-097.jpg",
-    "roll": "00002126",
-    "frame": "260725000021260024",
-    "width": 3130,
-    "height": 2075,
-    "orientation": "landscape",
-    "categories": [
-      "italy",
-      "landscape"
-    ]
-  },
-  {
-    "id": "098",
-    "file": "fig-098.jpg",
-    "roll": "00002126",
-    "frame": "260725000021260025",
-    "width": 3130,
-    "height": 2075,
-    "orientation": "landscape",
-    "categories": [
-      "italy",
-      "landscape"
-    ]
-  },
-  {
-    "id": "099",
-    "file": "fig-099.jpg",
-    "roll": "00002126",
-    "frame": "260725000021260026",
     "width": 3130,
     "height": 2075,
     "orientation": "landscape",
@@ -1681,32 +1525,6 @@
     "file": "fig-130.jpg",
     "roll": "00002127",
     "frame": "260725000021270022",
-    "width": 3130,
-    "height": 2075,
-    "orientation": "landscape",
-    "categories": [
-      "italy",
-      "portrait"
-    ]
-  },
-  {
-    "id": "131",
-    "file": "fig-131.jpg",
-    "roll": "00002127",
-    "frame": "260725000021270023",
-    "width": 3130,
-    "height": 2075,
-    "orientation": "landscape",
-    "categories": [
-      "italy",
-      "portrait"
-    ]
-  },
-  {
-    "id": "132",
-    "file": "fig-132.jpg",
-    "roll": "00002127",
-    "frame": "260725000021270024",
     "width": 3130,
     "height": 2075,
     "orientation": "landscape",
