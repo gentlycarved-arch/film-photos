@@ -78,8 +78,14 @@
     });
   }
 
-  // click → it comes to the front. Nothing moves, nothing animates.
+  // click → it comes to the front and stays fully clear, even after the cursor
+  // leaves. Only one layer is the front one, so the last click hands it over.
+  let front = null;
   function bringForward(el) {
+    if (front && front !== el) front.classList.remove('front');
+    el.classList.add('front');
+    front = el;
+
     el.style.zIndex = String(++topZ);
     // now that it is being looked at, swap in the full-size scan behind the scenes
     const img = el.querySelector('img');

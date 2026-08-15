@@ -38,6 +38,8 @@ body{
   object-fit:cover;
 }
 .plate:hover{ opacity:1; }
+/* the layer brought to the front stays clear */
+.plate.front{ opacity:1; }
 
 /* a fine registration grid over the whole table */
 .grid{
