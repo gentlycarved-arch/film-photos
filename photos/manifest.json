@@ -1692,10 +1692,10 @@
   {
     "id": "145",
     "file": "fig-145.jpg",
-    "roll": "saudi",
-    "frame": "",
-    "width": 994,
-    "height": 659,
+    "roll": "00001534",
+    "frame": "000015340020240207",
+    "width": 3089,
+    "height": 2048,
     "orientation": "landscape",
     "categories": [
       "saudi",
@@ -1705,10 +1705,10 @@
   {
     "id": "146",
     "file": "fig-146.jpg",
-    "roll": "saudi",
-    "frame": "",
-    "width": 994,
-    "height": 659,
+    "roll": "00001534",
+    "frame": "000015340019240207",
+    "width": 3089,
+    "height": 2048,
     "orientation": "landscape",
     "categories": [
       "saudi",
@@ -1718,10 +1718,10 @@
   {
     "id": "147",
     "file": "fig-147.jpg",
-    "roll": "saudi",
-    "frame": "",
-    "width": 994,
-    "height": 659,
+    "roll": "00001534",
+    "frame": "000015340021240207",
+    "width": 3089,
+    "height": 2048,
     "orientation": "landscape",
     "categories": [
       "saudi",
@@ -1731,10 +1731,10 @@
   {
     "id": "148",
     "file": "fig-148.jpg",
-    "roll": "saudi",
-    "frame": "",
-    "width": 994,
-    "height": 659,
+    "roll": "00001534",
+    "frame": "000015340027240207",
+    "width": 3089,
+    "height": 2048,
     "orientation": "landscape",
     "categories": [
       "saudi",
@@ -1744,10 +1744,10 @@
   {
     "id": "149",
     "file": "fig-149.jpg",
-    "roll": "saudi",
-    "frame": "",
-    "width": 994,
-    "height": 659,
+    "roll": "00001534",
+    "frame": "000015340023240207",
+    "width": 3089,
+    "height": 2048,
     "orientation": "landscape",
     "categories": [
       "saudi",
@@ -1770,10 +1770,10 @@
   {
     "id": "151",
     "file": "fig-151.jpg",
-    "roll": "saudi",
-    "frame": "",
-    "width": 994,
-    "height": 659,
+    "roll": "00001534",
+    "frame": "000015340032240207",
+    "width": 3089,
+    "height": 2048,
     "orientation": "landscape",
     "categories": [
       "saudi",
@@ -1787,6 +1787,19 @@
     "frame": "",
     "width": 994,
     "height": 659,
+    "orientation": "landscape",
+    "categories": [
+      "saudi",
+      "landscape"
+    ]
+  },
+  {
+    "id": "153",
+    "file": "fig-153.jpg",
+    "roll": "00001534",
+    "frame": "000015340030240207",
+    "width": 3089,
+    "height": 2048,
     "orientation": "landscape",
     "categories": [
       "saudi",
