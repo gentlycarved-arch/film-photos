@@ -1,0 +1,1874 @@
+[
+  {
+    "id": "001",
+    "file": "fig-001.jpg",
+    "roll": "00002124",
+    "frame": "260725000021240001",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "landscape"
+    ]
+  },
+  {
+    "id": "002",
+    "file": "fig-002.jpg",
+    "roll": "00002124",
+    "frame": "260725000021240002",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "landscape"
+    ]
+  },
+  {
+    "id": "003",
+    "file": "fig-003.jpg",
+    "roll": "00002124",
+    "frame": "260725000021240003",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "landscape"
+    ]
+  },
+  {
+    "id": "004",
+    "file": "fig-004.jpg",
+    "roll": "00002124",
+    "frame": "260725000021240004",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "portrait"
+    ]
+  },
+  {
+    "id": "005",
+    "file": "fig-005.jpg",
+    "roll": "00002124",
+    "frame": "260725000021240005",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "landscape"
+    ]
+  },
+  {
+    "id": "006",
+    "file": "fig-006.jpg",
+    "roll": "00002124",
+    "frame": "260725000021240006",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "landscape"
+    ]
+  },
+  {
+    "id": "007",
+    "file": "fig-007.jpg",
+    "roll": "00002124",
+    "frame": "260725000021240007",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "landscape"
+    ]
+  },
+  {
+    "id": "008",
+    "file": "fig-008.jpg",
+    "roll": "00002124",
+    "frame": "260725000021240008",
+    "width": 2075,
+    "height": 3130,
+    "orientation": "portrait",
+    "categories": [
+      "italy",
+      "portrait"
+    ]
+  },
+  {
+    "id": "009",
+    "file": "fig-009.jpg",
+    "roll": "00002124",
+    "frame": "260725000021240009",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "landscape"
+    ]
+  },
+  {
+    "id": "010",
+    "file": "fig-010.jpg",
+    "roll": "00002124",
+    "frame": "260725000021240010",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "landscape"
+    ]
+  },
+  {
+    "id": "011",
+    "file": "fig-011.jpg",
+    "roll": "00002124",
+    "frame": "260725000021240011",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "landscape"
+    ]
+  },
+  {
+    "id": "012",
+    "file": "fig-012.jpg",
+    "roll": "00002124",
+    "frame": "260725000021240012",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "landscape"
+    ]
+  },
+  {
+    "id": "013",
+    "file": "fig-013.jpg",
+    "roll": "00002124",
+    "frame": "260725000021240013",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "landscape"
+    ]
+  },
+  {
+    "id": "014",
+    "file": "fig-014.jpg",
+    "roll": "00002124",
+    "frame": "260725000021240014",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "landscape"
+    ]
+  },
+  {
+    "id": "015",
+    "file": "fig-015.jpg",
+    "roll": "00002124",
+    "frame": "260725000021240015",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "landscape"
+    ]
+  },
+  {
+    "id": "016",
+    "file": "fig-016.jpg",
+    "roll": "00002124",
+    "frame": "260725000021240016",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "portrait"
+    ]
+  },
+  {
+    "id": "017",
+    "file": "fig-017.jpg",
+    "roll": "00002124",
+    "frame": "260725000021240017",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "portrait"
+    ]
+  },
+  {
+    "id": "018",
+    "file": "fig-018.jpg",
+    "roll": "00002124",
+    "frame": "260725000021240018",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "portrait"
+    ]
+  },
+  {
+    "id": "019",
+    "file": "fig-019.jpg",
+    "roll": "00002124",
+    "frame": "260725000021240019",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "landscape"
+    ]
+  },
+  {
+    "id": "020",
+    "file": "fig-020.jpg",
+    "roll": "00002124",
+    "frame": "260725000021240020",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "landscape"
+    ]
+  },
+  {
+    "id": "021",
+    "file": "fig-021.jpg",
+    "roll": "00002124",
+    "frame": "260725000021240021",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "landscape"
+    ]
+  },
+  {
+    "id": "022",
+    "file": "fig-022.jpg",
+    "roll": "00002124",
+    "frame": "260725000021240022",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "landscape"
+    ]
+  },
+  {
+    "id": "023",
+    "file": "fig-023.jpg",
+    "roll": "00002124",
+    "frame": "260725000021240023",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "landscape"
+    ]
+  },
+  {
+    "id": "024",
+    "file": "fig-024.jpg",
+    "roll": "00002124",
+    "frame": "260725000021240024",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "landscape"
+    ]
+  },
+  {
+    "id": "025",
+    "file": "fig-025.jpg",
+    "roll": "00002124",
+    "frame": "260725000021240025",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "landscape"
+    ]
+  },
+  {
+    "id": "026",
+    "file": "fig-026.jpg",
+    "roll": "00002124",
+    "frame": "260725000021240026",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "landscape"
+    ]
+  },
+  {
+    "id": "027",
+    "file": "fig-027.jpg",
+    "roll": "00002124",
+    "frame": "260725000021240027",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "landscape"
+    ]
+  },
+  {
+    "id": "028",
+    "file": "fig-028.jpg",
+    "roll": "00002124",
+    "frame": "260725000021240028",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "landscape"
+    ]
+  },
+  {
+    "id": "029",
+    "file": "fig-029.jpg",
+    "roll": "00002124",
+    "frame": "260725000021240029",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "landscape"
+    ]
+  },
+  {
+    "id": "030",
+    "file": "fig-030.jpg",
+    "roll": "00002124",
+    "frame": "260725000021240030",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "landscape"
+    ]
+  },
+  {
+    "id": "031",
+    "file": "fig-031.jpg",
+    "roll": "00002124",
+    "frame": "260725000021240031",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "portrait"
+    ]
+  },
+  {
+    "id": "032",
+    "file": "fig-032.jpg",
+    "roll": "00002124",
+    "frame": "260725000021240032",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "portrait"
+    ]
+  },
+  {
+    "id": "033",
+    "file": "fig-033.jpg",
+    "roll": "00002124",
+    "frame": "260725000021240033",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "landscape"
+    ]
+  },
+  {
+    "id": "034",
+    "file": "fig-034.jpg",
+    "roll": "00002124",
+    "frame": "260725000021240034",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "landscape"
+    ]
+  },
+  {
+    "id": "035",
+    "file": "fig-035.jpg",
+    "roll": "00002124",
+    "frame": "260725000021240035",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "landscape"
+    ]
+  },
+  {
+    "id": "036",
+    "file": "fig-036.jpg",
+    "roll": "00002124",
+    "frame": "260725000021240036",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "portrait"
+    ]
+  },
+  {
+    "id": "037",
+    "file": "fig-037.jpg",
+    "roll": "00002125",
+    "frame": "260725000021250001",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "landscape"
+    ]
+  },
+  {
+    "id": "038",
+    "file": "fig-038.jpg",
+    "roll": "00002125",
+    "frame": "260725000021250002",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "landscape"
+    ]
+  },
+  {
+    "id": "039",
+    "file": "fig-039.jpg",
+    "roll": "00002125",
+    "frame": "260725000021250003",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "landscape"
+    ]
+  },
+  {
+    "id": "040",
+    "file": "fig-040.jpg",
+    "roll": "00002125",
+    "frame": "260725000021250004",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "landscape"
+    ]
+  },
+  {
+    "id": "041",
+    "file": "fig-041.jpg",
+    "roll": "00002125",
+    "frame": "260725000021250005",
+    "width": 2075,
+    "height": 3130,
+    "orientation": "portrait",
+    "categories": [
+      "italy",
+      "landscape"
+    ]
+  },
+  {
+    "id": "042",
+    "file": "fig-042.jpg",
+    "roll": "00002125",
+    "frame": "260725000021250006",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "landscape"
+    ]
+  },
+  {
+    "id": "043",
+    "file": "fig-043.jpg",
+    "roll": "00002125",
+    "frame": "260725000021250007",
+    "width": 2075,
+    "height": 3130,
+    "orientation": "portrait",
+    "categories": [
+      "italy",
+      "landscape"
+    ]
+  },
+  {
+    "id": "044",
+    "file": "fig-044.jpg",
+    "roll": "00002125",
+    "frame": "260725000021250008",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "landscape"
+    ]
+  },
+  {
+    "id": "045",
+    "file": "fig-045.jpg",
+    "roll": "00002125",
+    "frame": "260725000021250009",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "portrait"
+    ]
+  },
+  {
+    "id": "046",
+    "file": "fig-046.jpg",
+    "roll": "00002125",
+    "frame": "260725000021250010",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "landscape"
+    ]
+  },
+  {
+    "id": "047",
+    "file": "fig-047.jpg",
+    "roll": "00002125",
+    "frame": "260725000021250011",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "landscape"
+    ]
+  },
+  {
+    "id": "048",
+    "file": "fig-048.jpg",
+    "roll": "00002125",
+    "frame": "260725000021250012",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "landscape"
+    ]
+  },
+  {
+    "id": "049",
+    "file": "fig-049.jpg",
+    "roll": "00002125",
+    "frame": "260725000021250013",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "landscape"
+    ]
+  },
+  {
+    "id": "050",
+    "file": "fig-050.jpg",
+    "roll": "00002125",
+    "frame": "260725000021250014",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "landscape"
+    ]
+  },
+  {
+    "id": "051",
+    "file": "fig-051.jpg",
+    "roll": "00002125",
+    "frame": "260725000021250015",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "landscape"
+    ]
+  },
+  {
+    "id": "052",
+    "file": "fig-052.jpg",
+    "roll": "00002125",
+    "frame": "260725000021250016",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "portrait"
+    ]
+  },
+  {
+    "id": "053",
+    "file": "fig-053.jpg",
+    "roll": "00002125",
+    "frame": "260725000021250017",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "portrait"
+    ]
+  },
+  {
+    "id": "054",
+    "file": "fig-054.jpg",
+    "roll": "00002125",
+    "frame": "260725000021250018",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "portrait"
+    ]
+  },
+  {
+    "id": "055",
+    "file": "fig-055.jpg",
+    "roll": "00002125",
+    "frame": "260725000021250019",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "portrait"
+    ]
+  },
+  {
+    "id": "056",
+    "file": "fig-056.jpg",
+    "roll": "00002125",
+    "frame": "260725000021250020",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "portrait"
+    ]
+  },
+  {
+    "id": "057",
+    "file": "fig-057.jpg",
+    "roll": "00002125",
+    "frame": "260725000021250021",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "portrait"
+    ]
+  },
+  {
+    "id": "058",
+    "file": "fig-058.jpg",
+    "roll": "00002125",
+    "frame": "260725000021250022",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "portrait"
+    ]
+  },
+  {
+    "id": "059",
+    "file": "fig-059.jpg",
+    "roll": "00002125",
+    "frame": "260725000021250023",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "portrait"
+    ]
+  },
+  {
+    "id": "060",
+    "file": "fig-060.jpg",
+    "roll": "00002125",
+    "frame": "260725000021250024",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "portrait"
+    ]
+  },
+  {
+    "id": "061",
+    "file": "fig-061.jpg",
+    "roll": "00002125",
+    "frame": "260725000021250025",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "portrait"
+    ]
+  },
+  {
+    "id": "062",
+    "file": "fig-062.jpg",
+    "roll": "00002125",
+    "frame": "260725000021250026",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "portrait"
+    ]
+  },
+  {
+    "id": "063",
+    "file": "fig-063.jpg",
+    "roll": "00002125",
+    "frame": "260725000021250027",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "landscape"
+    ]
+  },
+  {
+    "id": "064",
+    "file": "fig-064.jpg",
+    "roll": "00002125",
+    "frame": "260725000021250028",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "landscape"
+    ]
+  },
+  {
+    "id": "065",
+    "file": "fig-065.jpg",
+    "roll": "00002125",
+    "frame": "260725000021250029",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "portrait"
+    ]
+  },
+  {
+    "id": "066",
+    "file": "fig-066.jpg",
+    "roll": "00002125",
+    "frame": "260725000021250030",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "landscape"
+    ]
+  },
+  {
+    "id": "067",
+    "file": "fig-067.jpg",
+    "roll": "00002125",
+    "frame": "260725000021250031",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "landscape"
+    ]
+  },
+  {
+    "id": "068",
+    "file": "fig-068.jpg",
+    "roll": "00002125",
+    "frame": "260725000021250032",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "landscape"
+    ]
+  },
+  {
+    "id": "069",
+    "file": "fig-069.jpg",
+    "roll": "00002125",
+    "frame": "260725000021250033",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "landscape"
+    ]
+  },
+  {
+    "id": "070",
+    "file": "fig-070.jpg",
+    "roll": "00002125",
+    "frame": "260725000021250034",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "landscape"
+    ]
+  },
+  {
+    "id": "071",
+    "file": "fig-071.jpg",
+    "roll": "00002125",
+    "frame": "260725000021250035",
+    "width": 2075,
+    "height": 3130,
+    "orientation": "portrait",
+    "categories": [
+      "italy",
+      "portrait"
+    ]
+  },
+  {
+    "id": "072",
+    "file": "fig-072.jpg",
+    "roll": "00002125",
+    "frame": "260725000021250036",
+    "width": 2075,
+    "height": 3130,
+    "orientation": "portrait",
+    "categories": [
+      "italy",
+      "portrait"
+    ]
+  },
+  {
+    "id": "073",
+    "file": "fig-073.jpg",
+    "roll": "00002125",
+    "frame": "260725000021250037",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "landscape"
+    ]
+  },
+  {
+    "id": "074",
+    "file": "fig-074.jpg",
+    "roll": "00002126",
+    "frame": "260725000021260001",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "landscape"
+    ]
+  },
+  {
+    "id": "075",
+    "file": "fig-075.jpg",
+    "roll": "00002126",
+    "frame": "260725000021260002",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "landscape"
+    ]
+  },
+  {
+    "id": "076",
+    "file": "fig-076.jpg",
+    "roll": "00002126",
+    "frame": "260725000021260003",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "landscape"
+    ]
+  },
+  {
+    "id": "077",
+    "file": "fig-077.jpg",
+    "roll": "00002126",
+    "frame": "260725000021260004",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "landscape"
+    ]
+  },
+  {
+    "id": "078",
+    "file": "fig-078.jpg",
+    "roll": "00002126",
+    "frame": "260725000021260005",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "landscape"
+    ]
+  },
+  {
+    "id": "079",
+    "file": "fig-079.jpg",
+    "roll": "00002126",
+    "frame": "260725000021260006",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "landscape"
+    ]
+  },
+  {
+    "id": "080",
+    "file": "fig-080.jpg",
+    "roll": "00002126",
+    "frame": "260725000021260007",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "landscape"
+    ]
+  },
+  {
+    "id": "081",
+    "file": "fig-081.jpg",
+    "roll": "00002126",
+    "frame": "260725000021260008",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "landscape"
+    ]
+  },
+  {
+    "id": "082",
+    "file": "fig-082.jpg",
+    "roll": "00002126",
+    "frame": "260725000021260009",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "landscape"
+    ]
+  },
+  {
+    "id": "083",
+    "file": "fig-083.jpg",
+    "roll": "00002126",
+    "frame": "260725000021260010",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "landscape"
+    ]
+  },
+  {
+    "id": "084",
+    "file": "fig-084.jpg",
+    "roll": "00002126",
+    "frame": "260725000021260011",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "landscape"
+    ]
+  },
+  {
+    "id": "085",
+    "file": "fig-085.jpg",
+    "roll": "00002126",
+    "frame": "260725000021260012",
+    "width": 2075,
+    "height": 3130,
+    "orientation": "portrait",
+    "categories": [
+      "italy",
+      "landscape"
+    ]
+  },
+  {
+    "id": "086",
+    "file": "fig-086.jpg",
+    "roll": "00002126",
+    "frame": "260725000021260013",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "landscape"
+    ]
+  },
+  {
+    "id": "087",
+    "file": "fig-087.jpg",
+    "roll": "00002126",
+    "frame": "260725000021260014",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "landscape"
+    ]
+  },
+  {
+    "id": "088",
+    "file": "fig-088.jpg",
+    "roll": "00002126",
+    "frame": "260725000021260015",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "landscape"
+    ]
+  },
+  {
+    "id": "089",
+    "file": "fig-089.jpg",
+    "roll": "00002126",
+    "frame": "260725000021260016",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "landscape"
+    ]
+  },
+  {
+    "id": "090",
+    "file": "fig-090.jpg",
+    "roll": "00002126",
+    "frame": "260725000021260017",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "landscape"
+    ]
+  },
+  {
+    "id": "091",
+    "file": "fig-091.jpg",
+    "roll": "00002126",
+    "frame": "260725000021260018",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "landscape"
+    ]
+  },
+  {
+    "id": "092",
+    "file": "fig-092.jpg",
+    "roll": "00002126",
+    "frame": "260725000021260019",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "landscape"
+    ]
+  },
+  {
+    "id": "093",
+    "file": "fig-093.jpg",
+    "roll": "00002126",
+    "frame": "260725000021260020",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "landscape"
+    ]
+  },
+  {
+    "id": "094",
+    "file": "fig-094.jpg",
+    "roll": "00002126",
+    "frame": "260725000021260021",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "landscape"
+    ]
+  },
+  {
+    "id": "095",
+    "file": "fig-095.jpg",
+    "roll": "00002126",
+    "frame": "260725000021260022",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "landscape"
+    ]
+  },
+  {
+    "id": "096",
+    "file": "fig-096.jpg",
+    "roll": "00002126",
+    "frame": "260725000021260023",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "landscape"
+    ]
+  },
+  {
+    "id": "097",
+    "file": "fig-097.jpg",
+    "roll": "00002126",
+    "frame": "260725000021260024",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "landscape"
+    ]
+  },
+  {
+    "id": "098",
+    "file": "fig-098.jpg",
+    "roll": "00002126",
+    "frame": "260725000021260025",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "landscape"
+    ]
+  },
+  {
+    "id": "099",
+    "file": "fig-099.jpg",
+    "roll": "00002126",
+    "frame": "260725000021260026",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "landscape"
+    ]
+  },
+  {
+    "id": "100",
+    "file": "fig-100.jpg",
+    "roll": "00002126",
+    "frame": "260725000021260027",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "landscape"
+    ]
+  },
+  {
+    "id": "101",
+    "file": "fig-101.jpg",
+    "roll": "00002126",
+    "frame": "260725000021260028",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "landscape"
+    ]
+  },
+  {
+    "id": "102",
+    "file": "fig-102.jpg",
+    "roll": "00002126",
+    "frame": "260725000021260029",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "portrait"
+    ]
+  },
+  {
+    "id": "103",
+    "file": "fig-103.jpg",
+    "roll": "00002126",
+    "frame": "260725000021260030",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "landscape"
+    ]
+  },
+  {
+    "id": "104",
+    "file": "fig-104.jpg",
+    "roll": "00002126",
+    "frame": "260725000021260031",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "landscape"
+    ]
+  },
+  {
+    "id": "105",
+    "file": "fig-105.jpg",
+    "roll": "00002126",
+    "frame": "260725000021260032",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "landscape"
+    ]
+  },
+  {
+    "id": "106",
+    "file": "fig-106.jpg",
+    "roll": "00002126",
+    "frame": "260725000021260033",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "landscape"
+    ]
+  },
+  {
+    "id": "107",
+    "file": "fig-107.jpg",
+    "roll": "00002126",
+    "frame": "260725000021260034",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "landscape"
+    ]
+  },
+  {
+    "id": "108",
+    "file": "fig-108.jpg",
+    "roll": "00002126",
+    "frame": "260725000021260035",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "portrait"
+    ]
+  },
+  {
+    "id": "109",
+    "file": "fig-109.jpg",
+    "roll": "00002127",
+    "frame": "260725000021270001",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "landscape"
+    ]
+  },
+  {
+    "id": "110",
+    "file": "fig-110.jpg",
+    "roll": "00002127",
+    "frame": "260725000021270002",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "landscape"
+    ]
+  },
+  {
+    "id": "111",
+    "file": "fig-111.jpg",
+    "roll": "00002127",
+    "frame": "260725000021270003",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "landscape"
+    ]
+  },
+  {
+    "id": "112",
+    "file": "fig-112.jpg",
+    "roll": "00002127",
+    "frame": "260725000021270004",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "landscape"
+    ]
+  },
+  {
+    "id": "113",
+    "file": "fig-113.jpg",
+    "roll": "00002127",
+    "frame": "260725000021270005",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "landscape"
+    ]
+  },
+  {
+    "id": "114",
+    "file": "fig-114.jpg",
+    "roll": "00002127",
+    "frame": "260725000021270006",
+    "width": 2075,
+    "height": 3130,
+    "orientation": "portrait",
+    "categories": [
+      "italy",
+      "portrait"
+    ]
+  },
+  {
+    "id": "115",
+    "file": "fig-115.jpg",
+    "roll": "00002127",
+    "frame": "260725000021270007",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "landscape"
+    ]
+  },
+  {
+    "id": "116",
+    "file": "fig-116.jpg",
+    "roll": "00002127",
+    "frame": "260725000021270008",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "landscape"
+    ]
+  },
+  {
+    "id": "117",
+    "file": "fig-117.jpg",
+    "roll": "00002127",
+    "frame": "260725000021270009",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "landscape"
+    ]
+  },
+  {
+    "id": "118",
+    "file": "fig-118.jpg",
+    "roll": "00002127",
+    "frame": "260725000021270010",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "landscape"
+    ]
+  },
+  {
+    "id": "119",
+    "file": "fig-119.jpg",
+    "roll": "00002127",
+    "frame": "260725000021270011",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "portrait"
+    ]
+  },
+  {
+    "id": "120",
+    "file": "fig-120.jpg",
+    "roll": "00002127",
+    "frame": "260725000021270012",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "portrait"
+    ]
+  },
+  {
+    "id": "121",
+    "file": "fig-121.jpg",
+    "roll": "00002127",
+    "frame": "260725000021270013",
+    "width": 2075,
+    "height": 3130,
+    "orientation": "portrait",
+    "categories": [
+      "italy",
+      "portrait"
+    ]
+  },
+  {
+    "id": "122",
+    "file": "fig-122.jpg",
+    "roll": "00002127",
+    "frame": "260725000021270014",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "portrait"
+    ]
+  },
+  {
+    "id": "123",
+    "file": "fig-123.jpg",
+    "roll": "00002127",
+    "frame": "260725000021270015",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "portrait"
+    ]
+  },
+  {
+    "id": "124",
+    "file": "fig-124.jpg",
+    "roll": "00002127",
+    "frame": "260725000021270016",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "portrait"
+    ]
+  },
+  {
+    "id": "125",
+    "file": "fig-125.jpg",
+    "roll": "00002127",
+    "frame": "260725000021270017",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "landscape"
+    ]
+  },
+  {
+    "id": "126",
+    "file": "fig-126.jpg",
+    "roll": "00002127",
+    "frame": "260725000021270018",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "portrait"
+    ]
+  },
+  {
+    "id": "127",
+    "file": "fig-127.jpg",
+    "roll": "00002127",
+    "frame": "260725000021270019",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "portrait"
+    ]
+  },
+  {
+    "id": "128",
+    "file": "fig-128.jpg",
+    "roll": "00002127",
+    "frame": "260725000021270020",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "portrait"
+    ]
+  },
+  {
+    "id": "129",
+    "file": "fig-129.jpg",
+    "roll": "00002127",
+    "frame": "260725000021270021",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "portrait"
+    ]
+  },
+  {
+    "id": "130",
+    "file": "fig-130.jpg",
+    "roll": "00002127",
+    "frame": "260725000021270022",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "portrait"
+    ]
+  },
+  {
+    "id": "131",
+    "file": "fig-131.jpg",
+    "roll": "00002127",
+    "frame": "260725000021270023",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "portrait"
+    ]
+  },
+  {
+    "id": "132",
+    "file": "fig-132.jpg",
+    "roll": "00002127",
+    "frame": "260725000021270024",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "portrait"
+    ]
+  },
+  {
+    "id": "133",
+    "file": "fig-133.jpg",
+    "roll": "00002127",
+    "frame": "260725000021270025",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "landscape"
+    ]
+  },
+  {
+    "id": "134",
+    "file": "fig-134.jpg",
+    "roll": "00002127",
+    "frame": "260725000021270026",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "landscape"
+    ]
+  },
+  {
+    "id": "135",
+    "file": "fig-135.jpg",
+    "roll": "00002127",
+    "frame": "260725000021270027",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "landscape"
+    ]
+  },
+  {
+    "id": "136",
+    "file": "fig-136.jpg",
+    "roll": "00002127",
+    "frame": "260725000021270028",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "landscape"
+    ]
+  },
+  {
+    "id": "137",
+    "file": "fig-137.jpg",
+    "roll": "00002127",
+    "frame": "260725000021270029",
+    "width": 2075,
+    "height": 3130,
+    "orientation": "portrait",
+    "categories": [
+      "italy",
+      "portrait"
+    ]
+  },
+  {
+    "id": "138",
+    "file": "fig-138.jpg",
+    "roll": "00002127",
+    "frame": "260725000021270030",
+    "width": 2075,
+    "height": 3130,
+    "orientation": "portrait",
+    "categories": [
+      "italy",
+      "portrait"
+    ]
+  },
+  {
+    "id": "139",
+    "file": "fig-139.jpg",
+    "roll": "00002127",
+    "frame": "260725000021270031",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "landscape"
+    ]
+  },
+  {
+    "id": "140",
+    "file": "fig-140.jpg",
+    "roll": "00002127",
+    "frame": "260725000021270032",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "landscape"
+    ]
+  },
+  {
+    "id": "141",
+    "file": "fig-141.jpg",
+    "roll": "00002127",
+    "frame": "260725000021270033",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "landscape"
+    ]
+  },
+  {
+    "id": "142",
+    "file": "fig-142.jpg",
+    "roll": "00002127",
+    "frame": "260725000021270034",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "landscape"
+    ]
+  },
+  {
+    "id": "143",
+    "file": "fig-143.jpg",
+    "roll": "00002127",
+    "frame": "260725000021270035",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "landscape"
+    ]
+  },
+  {
+    "id": "144",
+    "file": "fig-144.jpg",
+    "roll": "00002127",
+    "frame": "260725000021270036",
+    "width": 3130,
+    "height": 2075,
+    "orientation": "landscape",
+    "categories": [
+      "italy",
+      "landscape"
+    ]
+  }
+]
