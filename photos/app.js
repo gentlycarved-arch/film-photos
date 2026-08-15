@@ -2,12 +2,10 @@
   const exposuresEl = document.getElementById('exposures');
   const zonesEl = document.getElementById('zones');
   const nav = document.getElementById('nav');
+  const counter = document.getElementById('counter');
 
   const LAYERS = 4;          // photographs sharing the frame at any moment
 
-  // How each layer sits once the stack is ordered. Index 0 is the dominant exposure.
-  // Blend modes alternate so light and dark areas of different frames eat into
-  // one another rather than simply stacking.
   // Every layer is additive over black, the way stacked exposures build up on one
   // frame of film: highlights accumulate, shadows let whatever is beneath show through.
   const ROLES = [
@@ -20,9 +18,9 @@
 
   let all = [];
   let pool = [];
-  let layers = [];           // { el, img, item } in stacking order, 0 = dominant
+  let layers = [];           // in stacking order, 0 = dominant
   let hovered = -1;
-  let cursor = 0;            // how far through the collection the clicks have got
+  let idx = 0;               // index in the pool of the dominant exposure
 
   fetch('manifest.json')
     .then((r) => r.json())
@@ -30,10 +28,9 @@
       all = manifest;
       pool = manifest.slice();
       buildZones();
-      // open on the first frames of the collection, in order, the newest on top
-      for (let i = 0; i < LAYERS; i++) layers.unshift(makeLayer(pool[i % pool.length]));
-      cursor = LAYERS;
-      restack();
+      for (let i = 0; i < LAYERS; i++) layers.push(makeLayer());
+      idx = LAYERS - 1;
+      render();
     })
     .catch((err) => {
       exposuresEl.insertAdjacentHTML(
@@ -42,94 +39,129 @@
       );
     });
 
-  function makeLayer(item) {
+  function makeLayer() {
     const el = document.createElement('div');
     el.className = 'exposure';
-
     const img = document.createElement('img');
     img.alt = '';
     el.appendChild(img);
     exposuresEl.appendChild(el);
-
-    const layer = { el, img, item: null };
-    setPhoto(layer, item);
-    return layer;
+    return { el, img, file: null };
   }
 
-  // Each frame is cropped and framed a little differently, so the layers never
-  // line up squarely on top of one another.
-  function setPhoto(layer, item) {
-    if (!item) return;
-    layer.item = item;
-    layer.img.src = 'img/' + item.file;
-    const ox = 30 + Math.random() * 40;
-    const oy = 30 + Math.random() * 40;
-    layer.img.style.objectPosition = ox.toFixed(0) + '% ' + oy.toFixed(0) + '%';
-    const scale = 1.04 + Math.random() * 0.14;
-    const dx = (Math.random() - 0.5) * 5;
-    const dy = (Math.random() - 0.5) * 5;
-    layer.el.style.transform =
-      'translate(' + dx.toFixed(1) + '%, ' + dy.toFixed(1) + '%) scale(' + scale.toFixed(3) + ')';
+  // Framing is derived from the file name, so a photograph is always cropped and
+  // placed the same way. Without this, stepping back would re-frame what you just saw.
+  function framing(file) {
+    let h = 2166136261;
+    for (let i = 0; i < file.length; i++) { h ^= file.charCodeAt(i); h = Math.imul(h, 16777619); }
+    const r = () => { h ^= h << 13; h |= 0; h ^= h >>> 17; h ^= h << 5; h |= 0; return ((h >>> 0) % 10000) / 10000; };
+    return {
+      ox: 30 + r() * 40,
+      oy: 30 + r() * 40,
+      scale: 1.04 + r() * 0.14,
+      dx: (r() - 0.5) * 5,
+      dy: (r() - 0.5) * 5,
+    };
   }
 
-  // Apply the roles down the stack. This is the only thing click and hover change.
-  function restack() {
+  // Draw the stack from the current position: the dominant exposure plus the three
+  // frames behind it. Everything is addressed by index, so it reads in both directions.
+  function render() {
+    const n = pool.length;
     layers.forEach((layer, i) => {
+      const item = pool[((idx - i) % n + n) % n];
+      if (layer.file !== item.file) {
+        layer.file = item.file;
+        layer.img.src = 'img/' + item.file;
+        const f = framing(item.file);
+        layer.img.style.objectPosition = f.ox.toFixed(0) + '% ' + f.oy.toFixed(0) + '%';
+        layer.el.style.transform =
+          'translate(' + f.dx.toFixed(1) + '%, ' + f.dy.toFixed(1) + '%) scale(' + f.scale.toFixed(3) + ')';
+      }
       const role = ROLES[Math.min(i, ROLES.length - 1)];
       const lift = i === hovered ? HOVER_LIFT : 0;
       layer.el.style.zIndex = String(LAYERS - i);
       layer.el.style.mixBlendMode = role.blend;
       layer.el.style.opacity = Math.min(1, role.opacity + lift).toFixed(3);
-      // the dominant exposure is printed down less, so it reads clearly
-      // while the ones beneath stay as underlying exposures
       layer.el.classList.toggle('dominant', i === 0);
     });
+    counter.textContent =
+      String(idx + 1).padStart(3, '0') + ' / ' + String(pool.length).padStart(3, '0');
   }
 
-  // One invisible region per layer. Pointing at a region speaks to its layer.
+  function step(d) {
+    const n = pool.length;
+    idx = ((idx + d) % n + n) % n;
+    render();
+  }
+
+  // One invisible region per layer, for the hover lift only.
   function buildZones() {
     const cols = LAYERS <= 2 ? LAYERS : 2;
     const rows = Math.ceil(LAYERS / cols);
     zonesEl.style.gridTemplateColumns = 'repeat(' + cols + ', 1fr)';
     zonesEl.style.gridTemplateRows = 'repeat(' + rows + ', 1fr)';
-
     for (let i = 0; i < LAYERS; i++) {
       const z = document.createElement('div');
       z.className = 'zone';
-      z.addEventListener('mouseenter', () => { hovered = i; restack(); });
-      z.addEventListener('mouseleave', () => { if (hovered === i) { hovered = -1; restack(); } });
-      z.addEventListener('click', advance);
+      z.addEventListener('mouseenter', () => { hovered = i; render(); });
+      z.addEventListener('mouseleave', () => { if (hovered === i) { hovered = -1; render(); } });
       zonesEl.appendChild(z);
     }
   }
 
-  // Click advances the collection by one. The next photograph in order becomes the
-  // dominant exposure, everything already in the frame steps back a rank, and the
-  // faintest one drops out — so the stack reads as a sequence being worked through.
-  function advance() {
-    const next = pool[cursor % pool.length];
-    cursor++;
-    const recycled = layers.pop();     // the faintest exposure makes way
-    setPhoto(recycled, next);
-    layers.unshift(recycled);
-    hovered = 0;
-    restack();
-  }
+  // ---------- getting through the collection ----------
+  // click anywhere for the next frame, and every ordinary way of moving through a
+  // sequence works too, so 139 photographs don't take 139 deliberate clicks
+  zonesEl.addEventListener('click', () => step(1));
+
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ' || e.key === 'Enter') {
+      e.preventDefault(); step(1);
+    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+      e.preventDefault(); step(-1);
+    } else if (e.key === 'Home') {
+      e.preventDefault(); idx = LAYERS - 1; render();
+    }
+  });
+
+  let wheelAcc = 0, wheelLock = false;
+  window.addEventListener('wheel', (e) => {
+    wheelAcc += e.deltaY || e.deltaX;
+    if (wheelLock || Math.abs(wheelAcc) < 40) return;
+    step(wheelAcc > 0 ? 1 : -1);
+    wheelAcc = 0;
+    wheelLock = true;
+    setTimeout(() => { wheelLock = false; }, 90);
+  }, { passive: true });
+
+  // dragging across the frame scrubs through, for covering ground quickly
+  let scrub = null;
+  zonesEl.addEventListener('mousedown', (e) => { scrub = { x: e.clientX, moved: false }; });
+  window.addEventListener('mousemove', (e) => {
+    if (!scrub) return;
+    const dx = e.clientX - scrub.x;
+    if (Math.abs(dx) >= 46) {
+      step(dx > 0 ? 1 : -1);
+      scrub.x = e.clientX;
+      scrub.moved = true;
+    }
+  });
+  window.addEventListener('mouseup', () => { scrub = null; });
 
   // ---------- side navigation ----------
   nav.addEventListener('click', (e) => {
     const btn = e.target.closest('.nav-btn');
     if (!btn) return;
-    [...nav.children].forEach((b) => b.classList.toggle('active', b === btn));
+    [...nav.querySelectorAll('.nav-btn')].forEach((b) => b.classList.toggle('active', b === btn));
 
     const cat = btn.dataset.cat;
     pool = cat === 'all' ? all.slice() : all.filter((p) => (p.categories || []).includes(cat));
     if (!pool.length) pool = all.slice();
 
-    // restart the sequence at the top of whatever was selected
-    layers.forEach((l, i) => setPhoto(l, pool[(LAYERS - 1 - i) % pool.length]));
-    cursor = LAYERS;
+    layers.forEach((l) => { l.file = null; });
+    idx = Math.min(LAYERS - 1, pool.length - 1);
     hovered = -1;
-    restack();
+    render();
   });
 })();

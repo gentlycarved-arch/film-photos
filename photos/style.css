@@ -114,6 +114,13 @@ body{
   flex:0 0 auto;
   transition:background .15s ease, border-color .15s ease;
 }
+.counter{
+  margin-top:18px;
+  font-size:9px;
+  letter-spacing:.16em;
+  color:#453f38;
+}
+
 .nav-btn:hover{ color:var(--mark); }
 .nav-btn.active{ color:#cfc9bd; }
 .nav-btn.active::before{ background:#cfc9bd; border-color:#cfc9bd; }
