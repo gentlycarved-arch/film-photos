@@ -1,9 +1,8 @@
 :root{
-  --bg:#f0ede7;
-  --grid-line:#a9a396;
-  --mark:#6f6a61;
-  --text-dim:#8b877e;
-  --nav-w:104px;
+  --bg:#0d0c0b;
+  --mark:#8a857b;
+  --text-dim:#6f6a61;
+  --nav-w:118px;
 }
 
 *{box-sizing:border-box}
@@ -17,7 +16,7 @@ body{
   user-select:none;
 }
 
-/* the light table */
+/* the frame the exposures share */
 .stage{
   position:fixed;
   top:0; left:0; bottom:0;
@@ -26,71 +25,65 @@ body{
   background:var(--bg);
 }
 
-/* transparent photographic layers, overlapping */
-.plate{
+/* isolate so the blending stays between the photographs and never touches the page */
+.exposures{
   position:absolute;
-  cursor:grab;
-  opacity:.70;
-  border:1px solid rgba(111,106,97,.34);
-  transition:opacity .18s ease, transform .26s cubic-bezier(.22,.61,.36,1);
-  transform-origin:center center;
+  inset:0;
+  isolation:isolate;
 }
-.plate img{
+
+/* every photograph is full-bleed and occupies the same space as the others */
+.exposure{
+  position:absolute;
+  inset:0;
+  transition:opacity .13s linear;
+  will-change:opacity;
+}
+.exposure img{
   display:block;
   width:100%;
   height:100%;
   object-fit:cover;
-  pointer-events:none;
-}
-.plate:hover{ opacity:1; }
-
-/* the layer brought to the front stays clear */
-.plate.front{ opacity:1; }
-
-/* hovering enlarges it to full size */
-.plate.enlarged{
-  opacity:1;
-  z-index:90000;
-  cursor:grab;
+  /* four additive layers would sum past white, so each is printed down first —
+     the darkroom equivalent of cutting exposure time per pass */
+  filter:brightness(.58) contrast(1.12) saturate(.92);
 }
 
-/* while being moved it neither enlarges nor animates */
-.plate.dragging{
-  cursor:grabbing;
-  opacity:1;
-  transition:opacity .18s ease;
-  z-index:95000;
-}
-
-.plate.hidden{ display:none; }
-
-/* a fine registration grid over the whole table */
-.grid{
+/* film grain and a faint tonal veil, held over the whole composition */
+.grain{
   position:absolute;
   inset:0;
-  z-index:100000;
+  z-index:50;
   pointer-events:none;
+  opacity:.55;
+  mix-blend-mode:overlay;
   background-image:
-    linear-gradient(var(--grid-line) 1px, transparent 1px),
-    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
-  background-size:74px 74px;
-  background-position:-1px .5px;
-  opacity:.10;
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='4' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='200' height='200' filter='url(%23n)' opacity='0.5'/></svg>");
+  background-size:200px 200px;
 }
+
+/* invisible regions, one per exposure: where you point decides which one answers */
+.zones{
+  position:absolute;
+  inset:0;
+  z-index:60;
+  display:grid;
+}
+.zone{ cursor:pointer; }
 
 /* ---------- side navigation ---------- */
 .nav{
   position:fixed;
   top:0; right:0; bottom:0;
   width:var(--nav-w);
-  border-left:1px solid #cbc5b8;
-  background:#f1eee7;
+  border-left:1px solid #24211d;
+  background:#131211;
   display:flex;
   flex-direction:column;
   justify-content:center;
   gap:11px;
   padding:20px 16px;
-  z-index:200000;
+  z-index:200;
 }
 .nav-btn{
   font:inherit;
@@ -106,20 +99,19 @@ body{
   display:flex;
   align-items:center;
   gap:8px;
-  transition:color .18s ease;
+  transition:color .15s ease;
 }
 .nav-btn::before{
   content:"";
-  width:4px;
-  height:4px;
+  width:4px; height:4px;
   border-radius:50%;
   border:1px solid var(--text-dim);
   flex:0 0 auto;
-  transition:background .18s ease, border-color .18s ease;
+  transition:background .15s ease, border-color .15s ease;
 }
 .nav-btn:hover{ color:var(--mark); }
-.nav-btn.active{ color:var(--mark); }
-.nav-btn.active::before{ background:var(--mark); border-color:var(--mark); }
+.nav-btn.active{ color:#cfc9bd; }
+.nav-btn.active::before{ background:#cfc9bd; border-color:#cfc9bd; }
 
 @media(max-width:760px){
   :root{--nav-w:0px}
@@ -132,7 +124,7 @@ body{
     gap:14px;
     padding:12px 14px;
     border-left:none;
-    border-top:1px solid #cbc5b8;
+    border-top:1px solid #24211d;
     overflow-x:auto;
   }
   .nav-btn{white-space:nowrap}
