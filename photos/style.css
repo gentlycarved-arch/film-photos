@@ -47,6 +47,11 @@ body{
   /* four additive layers would sum past white, so each is printed down first —
      the darkroom equivalent of cutting exposure time per pass */
   filter:brightness(.58) contrast(1.12) saturate(.92);
+  transition:filter .13s linear;
+}
+/* the exposure on top is held back less, so it stays legible over the others */
+.exposure.dominant img{
+  filter:brightness(.86) contrast(1.06) saturate(1);
 }
 
 /* film grain and a faint tonal veil, held over the whole composition */

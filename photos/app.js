@@ -11,10 +11,10 @@
   // Every layer is additive over black, the way stacked exposures build up on one
   // frame of film: highlights accumulate, shadows let whatever is beneath show through.
   const ROLES = [
-    { opacity: 0.78, blend: 'screen' },
-    { opacity: 0.52, blend: 'screen' },
-    { opacity: 0.42, blend: 'screen' },
-    { opacity: 0.34, blend: 'screen' },
+    { opacity: 0.94, blend: 'screen' },
+    { opacity: 0.46, blend: 'screen' },
+    { opacity: 0.36, blend: 'screen' },
+    { opacity: 0.28, blend: 'screen' },
   ];
   const HOVER_LIFT = 0.16;   // how much pointing at a layer brings it up
 
@@ -22,6 +22,7 @@
   let pool = [];
   let layers = [];           // { el, img, item } in stacking order, 0 = dominant
   let hovered = -1;
+  let cursor = 0;            // how far through the collection the clicks have got
 
   fetch('manifest.json')
     .then((r) => r.json())
@@ -29,7 +30,9 @@
       all = manifest;
       pool = manifest.slice();
       buildZones();
-      for (let i = 0; i < LAYERS; i++) layers.push(makeLayer(draw()));
+      // open on the first frames of the collection, in order, the newest on top
+      for (let i = 0; i < LAYERS; i++) layers.unshift(makeLayer(pool[i % pool.length]));
+      cursor = LAYERS;
       restack();
     })
     .catch((err) => {
@@ -38,14 +41,6 @@
         '<p style="padding:40px;color:#aaa;font-family:monospace">Could not load manifest.json — ' + err + '</p>'
       );
     });
-
-  // a photograph not already on screen, so the four are always different
-  function draw() {
-    const onScreen = new Set(layers.map((l) => l.item && l.item.file));
-    const choices = pool.filter((p) => !onScreen.has(p.file));
-    const from = choices.length ? choices : pool;
-    return from[Math.floor(Math.random() * from.length)];
-  }
 
   function makeLayer(item) {
     const el = document.createElement('div');
@@ -85,6 +80,9 @@
       layer.el.style.zIndex = String(LAYERS - i);
       layer.el.style.mixBlendMode = role.blend;
       layer.el.style.opacity = Math.min(1, role.opacity + lift).toFixed(3);
+      // the dominant exposure is printed down less, so it reads clearly
+      // while the ones beneath stay as underlying exposures
+      layer.el.classList.toggle('dominant', i === 0);
     });
   }
 
@@ -100,24 +98,21 @@
       z.className = 'zone';
       z.addEventListener('mouseenter', () => { hovered = i; restack(); });
       z.addEventListener('mouseleave', () => { if (hovered === i) { hovered = -1; restack(); } });
-      z.addEventListener('click', () => bringForward(i));
+      z.addEventListener('click', advance);
       zonesEl.appendChild(z);
     }
   }
 
-  // Click makes that exposure dominant. The others stay in the frame, one step back.
-  // The layer pushed off the bottom is replaced, so the composition keeps turning over.
-  function bringForward(i) {
-    if (i === 0) {
-      // already dominant: retire the faintest layer for an unseen photograph
-      setPhoto(layers[layers.length - 1], draw());
-      restack();
-      return;
-    }
-    const [picked] = layers.splice(i, 1);
-    layers.unshift(picked);
+  // Click advances the collection by one. The next photograph in order becomes the
+  // dominant exposure, everything already in the frame steps back a rank, and the
+  // faintest one drops out — so the stack reads as a sequence being worked through.
+  function advance() {
+    const next = pool[cursor % pool.length];
+    cursor++;
+    const recycled = layers.pop();     // the faintest exposure makes way
+    setPhoto(recycled, next);
+    layers.unshift(recycled);
     hovered = 0;
-    setPhoto(layers[layers.length - 1], draw());
     restack();
   }
 
@@ -131,8 +126,9 @@
     pool = cat === 'all' ? all.slice() : all.filter((p) => (p.categories || []).includes(cat));
     if (!pool.length) pool = all.slice();
 
-    layers.forEach((l) => { l.item = null; });
-    layers.forEach((l) => setPhoto(l, draw()));
+    // restart the sequence at the top of whatever was selected
+    layers.forEach((l, i) => setPhoto(l, pool[(LAYERS - 1 - i) % pool.length]));
+    cursor = LAYERS;
     hovered = -1;
     restack();
   });
