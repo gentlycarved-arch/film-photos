@@ -7,12 +7,14 @@
   const readout = document.getElementById('readout');
   const pairbox = document.getElementById('pairbox');
   const views = document.getElementById('views');
+  const filters = document.getElementById('filters');
   const sheet = document.getElementById('sheet');
   const viewer = document.getElementById('viewer');
   const viewerImg = document.getElementById('viewerImg');
   const viewerLabel = document.getElementById('viewerLabel');
 
-  let everything = [];
+  let everything = [];   // the whole collection
+  let pool = [];         // whatever the current filter allows
   let openAt = -1;
 
   const rolls = {
@@ -34,17 +36,26 @@
     });
 
   function build(manifest) {
-    // the two rolls hold different halves of the collection, so a pairing is always
-    // two different photographs
     everything = manifest;
-    const half = Math.ceil(manifest.length / 2);
-    rolls.a.items = manifest.slice(0, half);
-    rolls.b.items = manifest.slice(half);
-
+    pool = manifest.slice();
     Object.keys(rolls).forEach((key) => {
       const roll = rolls[key];
       roll.imgs = [document.createElement('img'), document.createElement('img')];
       roll.imgs.forEach((im) => { im.alt = ''; roll.plate.appendChild(im); });
+    });
+    loadRolls();
+  }
+
+  // Split whatever is in the pool between the two rolls, so a pairing is always two
+  // different photographs. With only one frame to hand, both rolls hold it.
+  function loadRolls() {
+    const half = Math.ceil(pool.length / 2);
+    rolls.a.items = pool.length > 1 ? pool.slice(0, half) : pool.slice();
+    rolls.b.items = pool.length > 1 ? pool.slice(half) : pool.slice();
+
+    Object.keys(rolls).forEach((key) => {
+      const roll = rolls[key];
+      roll.strip.innerHTML = '';
       roll.items.forEach((item, i) => {
         const frame = document.createElement('div');
         frame.className = 'fframe';
@@ -60,6 +71,7 @@
         frame.addEventListener('click', () => expose(key, i));
         roll.strip.appendChild(frame);
       });
+      roll.strip.scrollLeft = 0;
     });
 
     expose('a', 0);
@@ -114,8 +126,8 @@
 
   // ---------- the grid, and one photograph filling the viewport ----------
   function buildSheet() {
-    if (sheet.children.length) return;          // built once
-    everything.forEach((item, i) => {
+    sheet.innerHTML = '';
+    pool.forEach((item, i) => {
       const cell = document.createElement('div');
       cell.className = 'cell';
       const img = document.createElement('img');
@@ -133,9 +145,9 @@
   }
 
   function openViewer(i) {
-    const n = everything.length;
+    const n = pool.length;
     openAt = ((i % n) + n) % n;
-    const item = everything[openAt];
+    const item = pool[openAt];
     viewerImg.src = 'img/' + item.file;
     viewerLabel.textContent =
       item.id + '  ·  ' + String(openAt + 1).padStart(3, '0') + ' / ' + String(n).padStart(3, '0');
@@ -161,6 +173,19 @@
     document.querySelector('.canvas').style.display = grid ? 'none' : '';
     document.querySelector('.rolls').style.display = grid ? 'none' : '';
     if (grid) buildSheet();
+  });
+
+  filters.addEventListener('click', (e) => {
+    const btn = e.target.closest('.vbtn');
+    if (!btn) return;
+    [...filters.children].forEach((b) => b.classList.toggle('active', b === btn));
+    const cat = btn.dataset.cat;
+    pool = cat === 'all' ? everything.slice()
+                         : everything.filter((p) => (p.categories || []).includes(cat));
+    if (!pool.length) pool = everything.slice();
+    closeViewer();
+    loadRolls();
+    if (sheet.classList.contains('on')) buildSheet();
   });
 
   shuffle.addEventListener('click', () => {

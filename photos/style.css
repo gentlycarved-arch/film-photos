@@ -320,3 +320,13 @@ body{
   letter-spacing:.16em;
   color:#6f6a61;
 }
+
+.filters{
+  position:fixed;
+  top:14px; left:16px;
+  z-index:40;
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+  max-width:calc(100vw - 260px);
+}

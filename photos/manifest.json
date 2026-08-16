@@ -793,6 +793,7 @@
     "height": 2075,
     "orientation": "landscape",
     "categories": [
+      "food",
       "italy",
       "landscape"
     ]
@@ -911,7 +912,8 @@
     "orientation": "landscape",
     "categories": [
       "italy",
-      "landscape"
+      "landscape",
+      "overexposed"
     ]
   },
   {
@@ -1280,6 +1282,7 @@
     "height": 2075,
     "orientation": "landscape",
     "categories": [
+      "food",
       "italy",
       "landscape"
     ]
@@ -1293,6 +1296,7 @@
     "height": 2075,
     "orientation": "landscape",
     "categories": [
+      "food",
       "italy",
       "landscape"
     ]
@@ -1307,7 +1311,8 @@
     "orientation": "landscape",
     "categories": [
       "italy",
-      "landscape"
+      "landscape",
+      "portrait"
     ]
   },
   {
@@ -1320,7 +1325,8 @@
     "orientation": "landscape",
     "categories": [
       "italy",
-      "landscape"
+      "landscape",
+      "portrait"
     ]
   },
   {
@@ -1333,6 +1339,7 @@
     "orientation": "portrait",
     "categories": [
       "italy",
+      "overexposed",
       "portrait"
     ]
   },
@@ -1476,7 +1483,8 @@
     "orientation": "landscape",
     "categories": [
       "italy",
-      "landscape"
+      "landscape",
+      "portrait"
     ]
   },
   {
@@ -1554,7 +1562,8 @@
     "orientation": "landscape",
     "categories": [
       "italy",
-      "landscape"
+      "landscape",
+      "portrait"
     ]
   },
   {
@@ -1567,7 +1576,8 @@
     "orientation": "landscape",
     "categories": [
       "italy",
-      "landscape"
+      "landscape",
+      "portrait"
     ]
   },
   {
@@ -1580,7 +1590,8 @@
     "orientation": "landscape",
     "categories": [
       "italy",
-      "landscape"
+      "landscape",
+      "portrait"
     ]
   },
   {
@@ -1593,7 +1604,8 @@
     "orientation": "landscape",
     "categories": [
       "italy",
-      "landscape"
+      "landscape",
+      "portrait"
     ]
   },
   {
@@ -1606,6 +1618,7 @@
     "orientation": "portrait",
     "categories": [
       "italy",
+      "overexposed",
       "portrait"
     ]
   },
@@ -1619,6 +1632,7 @@
     "orientation": "portrait",
     "categories": [
       "italy",
+      "overexposed",
       "portrait"
     ]
   },
@@ -1671,7 +1685,8 @@
     "orientation": "landscape",
     "categories": [
       "italy",
-      "landscape"
+      "landscape",
+      "portrait"
     ]
   },
   {
@@ -1709,8 +1724,8 @@
     "height": 2048,
     "orientation": "landscape",
     "categories": [
-      "saudi",
-      "landscape"
+      "landscape",
+      "saudi"
     ]
   },
   {
@@ -1722,8 +1737,8 @@
     "height": 2048,
     "orientation": "landscape",
     "categories": [
-      "saudi",
-      "landscape"
+      "landscape",
+      "saudi"
     ]
   },
   {
@@ -1735,8 +1750,9 @@
     "height": 2048,
     "orientation": "landscape",
     "categories": [
-      "saudi",
-      "landscape"
+      "landscape",
+      "portrait",
+      "saudi"
     ]
   },
   {
@@ -1748,8 +1764,8 @@
     "height": 2048,
     "orientation": "landscape",
     "categories": [
-      "saudi",
-      "landscape"
+      "landscape",
+      "saudi"
     ]
   },
   {
@@ -1761,8 +1777,9 @@
     "height": 2048,
     "orientation": "landscape",
     "categories": [
-      "saudi",
-      "landscape"
+      "landscape",
+      "portrait",
+      "saudi"
     ]
   },
   {
@@ -1774,8 +1791,8 @@
     "height": 659,
     "orientation": "landscape",
     "categories": [
-      "saudi",
-      "landscape"
+      "landscape",
+      "saudi"
     ]
   },
   {
@@ -1787,8 +1804,8 @@
     "height": 2048,
     "orientation": "landscape",
     "categories": [
-      "saudi",
-      "landscape"
+      "landscape",
+      "saudi"
     ]
   },
   {
@@ -1800,8 +1817,8 @@
     "height": 659,
     "orientation": "landscape",
     "categories": [
-      "saudi",
-      "landscape"
+      "landscape",
+      "saudi"
     ]
   },
   {
@@ -1813,8 +1830,9 @@
     "height": 2048,
     "orientation": "landscape",
     "categories": [
-      "saudi",
-      "landscape"
+      "landscape",
+      "portrait",
+      "saudi"
     ]
   }
 ]
