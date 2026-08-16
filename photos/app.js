@@ -5,6 +5,9 @@
   const views = document.getElementById('views');
   const counter = document.getElementById('counter');
   const sheet = document.getElementById('sheet');
+  const pair = document.getElementById('pair');
+  const pairA = document.getElementById('pgridA');
+  const pairB = document.getElementById('pgridB');
   const viewer = document.getElementById('viewer');
   const viewerImg = document.getElementById('viewerImg');
   const viewerImgB = document.getElementById('viewerImgB');
@@ -159,6 +162,85 @@
   });
   window.addEventListener('mouseup', () => { scrub = null; });
 
+  // ---------- two contact sheets, one over the other ----------
+  const PAIR_COLS = 4, PAIR_ROWS = 3;
+  const PAIR_CELLS = PAIR_COLS * PAIR_ROWS;
+  let shift = { x: 0, y: 0 };     // how far sheet B sits off sheet A
+  let liftedCell = null;
+
+  function buildPair() {
+    const n = pool.length;
+    [pairA, pairB].forEach((grid, g) => {
+      grid.innerHTML = '';
+      for (let i = 0; i < PAIR_CELLS; i++) {
+        // the two sheets draw from opposite halves, so they are different collections
+        const at = (g === 0 ? i : i + Math.floor(n / 2)) % n;
+        const item = pool[at];
+        const cell = document.createElement('div');
+        cell.className = 'pcell';
+        const img = document.createElement('img');
+        // a cell is a quarter of the viewport wide; the full scans would put a
+        // quarter-gigabyte of decoded bitmap under a full-screen blend
+        img.src = 'img-grid/' + item.file;
+        img.alt = '';
+        cell.appendChild(img);
+        const label = document.createElement('div');
+        label.className = 'pcell-label';
+        label.textContent = 'fig.' + item.id;
+        cell.appendChild(label);
+        cell.addEventListener('click', (e) => {
+          e.stopPropagation();
+          if (pairDrag && pairDrag.moved) return;
+          liftCell(cell, grid);
+        });
+        grid.appendChild(cell);
+      }
+    });
+    // start half a cell out of true, so the overlap is legible from the first moment
+    const r = pair.getBoundingClientRect();
+    shift = { x: (r.width / PAIR_COLS) * 0.5, y: (r.height / PAIR_ROWS) * 0.32 };
+    applyShift();
+  }
+
+  function applyShift() {
+    pairB.style.transform = 'translate(' + shift.x.toFixed(1) + 'px, ' + shift.y.toFixed(1) + 'px)';
+  }
+
+  function liftCell(cell, grid) {
+    if (liftedCell) liftedCell.classList.remove('lifted');
+    liftedCell = cell === liftedCell ? null : cell;
+    if (liftedCell) liftedCell.classList.add('lifted');
+    // the other sheet steps back so the chosen frame carries
+    pairA.classList.toggle('recessed', !!liftedCell && grid !== pairA);
+    pairB.classList.toggle('recessed', !!liftedCell && grid !== pairB);
+  }
+
+  // Sheet B can be slid over sheet A, but only within a cell either way: the point is
+  // to see new pairings line up, not to scatter the photographs.
+  let pairDrag = null;
+  pair.addEventListener('mousedown', (e) => {
+    pairDrag = { x: e.clientX, y: e.clientY, from: { ...shift }, moved: false };
+    pair.classList.add('shifting');
+  });
+  window.addEventListener('mousemove', (e) => {
+    if (!pairDrag) return;
+    const dx = e.clientX - pairDrag.x;
+    const dy = e.clientY - pairDrag.y;
+    if (!pairDrag.moved && Math.hypot(dx, dy) > 3) pairDrag.moved = true;
+    if (!pairDrag.moved) return;
+    const r = pair.getBoundingClientRect();
+    const capX = r.width / PAIR_COLS;
+    const capY = r.height / PAIR_ROWS;
+    shift.x = Math.max(-capX, Math.min(pairDrag.from.x + dx, capX));
+    shift.y = Math.max(-capY, Math.min(pairDrag.from.y + dy, capY));
+    applyShift();
+  });
+  window.addEventListener('mouseup', () => {
+    if (!pairDrag) return;
+    pair.classList.remove('shifting');
+    setTimeout(() => { pairDrag = null; }, 0);
+  });
+
   // ---------- the grid, and one photograph filling the viewport ----------
   function buildSheet() {
     sheet.innerHTML = '';
@@ -215,6 +297,7 @@
   }
 
   function updateHint() {
+    if (view === 'pair') { hint.textContent = 'drag to slide one sheet over the other'; return; }
     if (view !== 'sheet') { hint.textContent = ''; return; }
     hint.textContent = picked.length === 1
       ? 'pick a second to expose over it'
@@ -251,11 +334,12 @@
   function setView(next) {
     view = next;
     closeViewer(true);
-    const onSheet = view === 'sheet';
-    sheet.classList.toggle('on', onSheet);
-    stage.style.display = onSheet ? 'none' : '';
-    counter.style.visibility = onSheet ? 'hidden' : '';
-    if (onSheet) buildSheet();
+    sheet.classList.toggle('on', view === 'sheet');
+    pair.classList.toggle('on', view === 'pair');
+    stage.style.display = view === 'exposure' ? '' : 'none';
+    counter.style.visibility = view === 'exposure' ? '' : 'hidden';
+    if (view === 'sheet') buildSheet();
+    else if (view === 'pair') buildPair();
     else render();
     updateHint();
   }
@@ -282,6 +366,7 @@
     hovered = -1;
     closeViewer(true);
     if (view === 'sheet') buildSheet();
+    else if (view === 'pair') buildPair();
     else render();
     updateHint();
   });

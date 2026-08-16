@@ -67,6 +67,69 @@ body{
   background-size:200px 200px;
 }
 
+/* ---------- two contact sheets printed on transparent material ---------- */
+.pair{
+  position:fixed;
+  top:0; left:0; bottom:0;
+  right:var(--nav-w);
+  overflow:hidden;
+  display:none;
+  background:var(--bg);
+  isolation:isolate;
+  cursor:grab;
+}
+.pair.on{ display:block; }
+.pair.shifting{ cursor:grabbing; }
+
+/* both sheets run past the edges, so sliding one never exposes bare ground */
+.pgrid{
+  position:absolute;
+  top:-12%; left:-12%; right:-12%; bottom:-12%;
+  display:grid;
+  grid-template-columns:repeat(4, 1fr);
+  grid-template-rows:repeat(3, 1fr);
+}
+/* the second sheet is additive over the first: where they cross, the exposures sum */
+.pgrid-b{ mix-blend-mode:screen; }
+
+.pcell{
+  position:relative;
+  overflow:hidden;
+  cursor:pointer;
+}
+.pcell img{
+  display:block;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  transition:filter .12s linear, opacity .12s linear;
+}
+.pgrid-a .pcell img{ filter:brightness(.74) contrast(1.08) saturate(.94); }
+.pgrid-b .pcell img{ filter:brightness(.62) contrast(1.1) saturate(.92); }
+/* the photograph under the cursor comes up, so it reads as a single frame */
+.pgrid-a .pcell:hover img{ filter:brightness(1) contrast(1.02) saturate(1); }
+.pgrid-b .pcell:hover img{ filter:brightness(.92) contrast(1.04) saturate(1); }
+/* a chosen photograph stays forward */
+.pcell.lifted{ z-index:5; }
+.pgrid-a .pcell.lifted img,
+.pgrid-b .pcell.lifted img{ filter:brightness(1.02) contrast(1) saturate(1.02); }
+
+/* the sheet holding the chosen frame carries the composition */
+.pgrid.recessed{ opacity:.62; }
+
+.pcell-label{
+  position:absolute;
+  left:7px; top:6px;
+  font-size:8px;
+  letter-spacing:.12em;
+  color:rgba(236,230,218,.9);
+  text-shadow:0 1px 3px rgba(0,0,0,.85);
+  opacity:0;
+  transition:opacity .12s linear;
+  pointer-events:none;
+}
+.pcell:hover .pcell-label{ opacity:1; }
+
 /* ---------- the grid: five across, straightforward ---------- */
 .sheet{
   position:fixed;
