@@ -52,7 +52,7 @@ body{
 }
 
 /* a soft light that keeps travelling round the border of a chosen pair */
-.pairbox::after{
+.pairring::after{
   content:"";
   position:absolute;
   inset:-2px;
@@ -77,14 +77,30 @@ body{
 }
 @keyframes sweep{ to{ --sweep:360deg; } }
 
-/* and a brief lift the moment a new pair comes together */
-.pairbox.fresh{
-  border-color:rgba(240,232,215,.8);
-  box-shadow:0 0 0 5px rgba(11,10,9,.9), 0 0 34px rgba(240,232,215,.16);
+/* the single border drawn round the two chosen frames once they have slid together */
+.pairring{
+  position:fixed;
+  pointer-events:none;
+  z-index:30;
+  border:1px solid rgba(232,224,206,.65);
+  opacity:0;
+  transition:left .34s cubic-bezier(.2,.72,.24,1),
+             top .34s cubic-bezier(.2,.72,.24,1),
+             width .34s cubic-bezier(.2,.72,.24,1),
+             height .34s cubic-bezier(.2,.72,.24,1),
+             opacity .2s linear;
+}
+.pairring.on{ opacity:1; }
+/* a brief lift as a new pair comes together */
+.pairring.fresh{
+  border-color:rgba(246,240,226,.95);
+  box-shadow:0 0 20px rgba(246,240,226,.18);
 }
 
 @media(prefers-reduced-motion:reduce){
-  .pairbox::after{ animation:none; }
+  .pairring::after{ animation:none; }
+  .pairring{ transition:opacity .2s linear; }
+  .strip{ scroll-behavior:auto; }
 }
 
 .plate{
@@ -177,12 +193,13 @@ body{
 
 /* the strip itself: film base, sprockets punched along both edges */
 .strip{
+  scroll-behavior:smooth;
   display:flex;
   gap:5px;
   align-items:stretch;
   overflow-x:auto;
   overflow-y:hidden;
-  padding:9px 12px;
+  padding:9px calc(50% - 58px);
   background:
     /* sprocket holes, top and bottom */
     repeating-linear-gradient(90deg,
@@ -207,7 +224,8 @@ body{
 .fframe img{
   display:block;
   height:100%;
-  width:auto;
+  width:100%;
+  object-fit:cover;
   filter:brightness(.92) saturate(.9) contrast(1.02);
 }
 .fframe:hover{ opacity:1; }
@@ -225,10 +243,7 @@ body{
 }
 
 /* whichever frame is currently exposed */
-.fframe.chosen{
-  opacity:1;
-  box-shadow:0 0 0 1px rgba(240,233,219,.9);
-}
+.fframe.chosen{ opacity:1; }
 .fframe.chosen .fnum{ opacity:1; color:#f0e9db; }
 
 @media(max-width:760px){

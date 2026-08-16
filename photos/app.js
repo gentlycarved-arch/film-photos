@@ -6,6 +6,7 @@
   const shuffle = document.getElementById('shuffle');
   const readout = document.getElementById('readout');
   const pairbox = document.getElementById('pairbox');
+  const pairring = document.getElementById('pairring');
   const views = document.getElementById('views');
   const filters = document.getElementById('filters');
   const sheet = document.getElementById('sheet');
@@ -19,10 +20,10 @@
 
   const rolls = {
     a: { strip: stripA, plate: plateA, items: [], chosen: null, imgs: [], slot: 0, gen: 0,
-         enter: 'translateX(-48%)', rest: 'translateX(0)' },
+         rest: 'translateX(0)' },
     b: { strip: stripB, plate: plateB, items: [], chosen: null, imgs: [], slot: 0, gen: 0,
          // the second never lands quite square on the first
-         enter: 'translateX(48%) scale(1.05)', rest: 'translateX(0.9%) translateY(-0.7%) scale(1.05)' },
+         rest: 'translateX(0.9%) translateY(-0.7%) scale(1.05)' },
   };
 
   fetch('manifest.json')
@@ -59,6 +60,7 @@
       roll.items.forEach((item, i) => {
         const frame = document.createElement('div');
         frame.className = 'fframe';
+        frame.style.width = Math.round(78 * (item.width / item.height)) + 'px';
         const img = document.createElement('img');
         img.src = 'img-grid/' + item.file;
         img.loading = 'lazy';
@@ -76,6 +78,7 @@
 
     expose('a', 0);
     expose('b', 0);
+    trackRing();
   }
 
   // Put a frame from one roll into its half of the exposure. Each plate owns exactly
@@ -97,17 +100,10 @@
     const done = () => {
       if (gen !== roll.gen) return;        // a later choice already won
       roll.slot ^= 1;
-      // Travel in from its own side to meet the other. Driven by the animation API
-      // rather than a CSS transition: setting the two transforms in one go left the
-      // browser free to collapse them into a single style change, and no transition
-      // was ever created — the frame simply appeared in place.
       incoming.style.transform = roll.rest;
       incoming.classList.add('showing');
-      incoming.animate(
-        [{ transform: roll.enter }, { transform: roll.rest }],
-        { duration: 420, easing: 'cubic-bezier(.2,.72,.24,1)' }
-      );
       outgoing.classList.remove('showing');
+      centreChosen(roll);
       say();
     };
 
@@ -116,17 +112,64 @@
     if (incoming.complete) done();          // already cached
   }
 
+  // Slide the roll so the chosen frame comes to the middle of the screen. Both rolls
+  // do this, so a frame picked from one far end and a frame picked from the other meet
+  // one above the other in the centre.
+  function centreChosen(roll) {
+    const frame = roll.strip.children[roll.chosen];
+    if (!frame) return;
+    roll.strip.scrollTo({
+      left: frame.offsetLeft + frame.offsetWidth / 2 - roll.strip.clientWidth / 2,
+      behavior: 'smooth',
+    });
+    trackRing();
+  }
+
+  // One border enclosing both chosen frames, drawn round the pair rather than round
+  // each of them. It follows while the rolls are still sliding.
+  let ringRaf = 0;
+  function drawRing() {
+    const fa = rolls.a.strip.children[rolls.a.chosen];
+    const fb = rolls.b.strip.children[rolls.b.chosen];
+    if (!fa || !fb) { pairring.classList.remove('on'); return; }
+    const ra = fa.getBoundingClientRect();
+    const rb = fb.getBoundingClientRect();
+    const left = Math.min(ra.left, rb.left);
+    const right = Math.max(ra.right, rb.right);
+    const top = Math.min(ra.top, rb.top);
+    const bottom = Math.max(ra.bottom, rb.bottom);
+    pairring.style.left = (left - 3) + 'px';
+    pairring.style.top = (top - 3) + 'px';
+    pairring.style.width = (right - left + 6) + 'px';
+    pairring.style.height = (bottom - top + 6) + 'px';
+    pairring.classList.add('on');
+  }
+
+  // while a roll is easing into place the ring has to keep up, so follow the frames
+  function trackRing() {
+    cancelAnimationFrame(ringRaf);
+    const until = performance.now() + 700;
+    const tick = () => {
+      drawRing();
+      if (performance.now() < until) ringRaf = requestAnimationFrame(tick);
+    };
+    tick();
+  }
+
+  [stripA, stripB].forEach((s) => s.addEventListener('scroll', drawRing, { passive: true }));
+  window.addEventListener('resize', drawRing);
+
   function say() {
     const a = rolls.a.items[rolls.a.chosen];
     const b = rolls.b.items[rolls.b.chosen];
     if (!a || !b) return;
     readout.textContent = a.id + '  +  ' + b.id;
     // a brief lift on the border as the pair meets
-    pairbox.classList.remove('fresh');
-    void pairbox.offsetWidth;
-    pairbox.classList.add('fresh');
+    pairring.classList.remove('fresh');
+    void pairring.offsetWidth;
+    pairring.classList.add('fresh');
     clearTimeout(say._t);
-    say._t = setTimeout(() => pairbox.classList.remove('fresh'), 620);
+    say._t = setTimeout(() => pairring.classList.remove('fresh'), 620);
   }
 
   // ---------- the grid, and one photograph filling the viewport ----------
@@ -177,6 +220,7 @@
     sheet.classList.toggle('on', grid);
     document.querySelector('.canvas').style.display = grid ? 'none' : '';
     document.querySelector('.rolls').style.display = grid ? 'none' : '';
+    if (!grid) trackRing();
     if (grid) buildSheet();
   });
 
