@@ -1,10 +1,12 @@
 (function () {
+  const stage = document.getElementById('stage');
   const exposuresEl = document.getElementById('exposures');
-  const zonesEl = document.getElementById('zones');
+  const windowsEl = document.getElementById('windows');
   const nav = document.getElementById('nav');
   const counter = document.getElementById('counter');
 
   const LAYERS = 4;          // photographs sharing the frame at any moment
+  const WINDOWS = 3;         // apertures onto what is coming next
 
   // Every layer is additive over black, the way stacked exposures build up on one
   // frame of film: highlights accumulate, shadows let whatever is beneath show through.
@@ -19,6 +21,7 @@
   let all = [];
   let pool = [];
   let layers = [];           // in stacking order, 0 = dominant
+  let windows = [];
   let hovered = -1;
   let idx = 0;               // index in the pool of the dominant exposure
 
@@ -27,8 +30,8 @@
     .then((manifest) => {
       all = manifest;
       pool = manifest.slice();
-      buildZones();
       for (let i = 0; i < LAYERS; i++) layers.push(makeLayer());
+      buildWindows();
       idx = LAYERS - 1;
       render();
     })
@@ -49,12 +52,17 @@
     return { el, img, file: null };
   }
 
+  // deterministic stream of numbers from any string
+  function seeded(key) {
+    let h = 2166136261;
+    for (let i = 0; i < key.length; i++) { h ^= key.charCodeAt(i); h = Math.imul(h, 16777619); }
+    return () => { h ^= h << 13; h |= 0; h ^= h >>> 17; h ^= h << 5; h |= 0; return ((h >>> 0) % 10000) / 10000; };
+  }
+
   // Framing is derived from the file name, so a photograph is always cropped and
   // placed the same way. Without this, stepping back would re-frame what you just saw.
   function framing(file) {
-    let h = 2166136261;
-    for (let i = 0; i < file.length; i++) { h ^= file.charCodeAt(i); h = Math.imul(h, 16777619); }
-    const r = () => { h ^= h << 13; h |= 0; h ^= h >>> 17; h ^= h << 5; h |= 0; return ((h >>> 0) % 10000) / 10000; };
+    const r = seeded(file);
     return {
       ox: 30 + r() * 40,
       oy: 30 + r() * 40,
@@ -87,6 +95,7 @@
     });
     counter.textContent =
       String(idx + 1).padStart(3, '0') + ' / ' + String(pool.length).padStart(3, '0');
+    placeWindows();
   }
 
   function step(d) {
@@ -95,25 +104,76 @@
     render();
   }
 
-  // One invisible region per layer, for the hover lift only.
-  function buildZones() {
-    const cols = LAYERS <= 2 ? LAYERS : 2;
-    const rows = Math.ceil(LAYERS / cols);
-    zonesEl.style.gridTemplateColumns = 'repeat(' + cols + ', 1fr)';
-    zonesEl.style.gridTemplateRows = 'repeat(' + rows + ', 1fr)';
-    for (let i = 0; i < LAYERS; i++) {
-      const z = document.createElement('div');
-      z.className = 'zone';
-      z.addEventListener('mouseenter', () => { hovered = i; render(); });
-      z.addEventListener('mouseleave', () => { if (hovered === i) { hovered = -1; render(); } });
-      zonesEl.appendChild(z);
+  // Apertures onto photographs further down the sequence. Each shows the part of a
+  // frame that would fall in that spot were it full-bleed, so the window reads as a
+  // hole cut in the composition rather than a thumbnail pasted on top.
+  function buildWindows() {
+    for (let i = 0; i < WINDOWS; i++) {
+      const w = document.createElement('div');
+      w.className = 'window';
+      const img = document.createElement('img');
+      img.alt = '';
+      w.appendChild(img);
+      const label = document.createElement('div');
+      label.className = 'wlabel';
+      w.appendChild(label);
+      ['tl', 'tr', 'bl', 'br'].forEach((c) => {
+        const t = document.createElement('span');
+        t.className = 'wtick wt-' + c;
+        w.appendChild(t);
+      });
+      w.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (w._target != null) { idx = w._target; render(); }
+      });
+      windowsEl.appendChild(w);
+      windows.push({ el: w, img, label });
     }
+    window.addEventListener('resize', placeWindows);
+  }
+
+  function placeWindows() {
+    const s = stage.getBoundingClientRect();
+    const n = pool.length;
+    if (!n) return;
+
+    windows.forEach((win, i) => {
+      // positions shift as you move through, so the apertures never sit in a fixed grid
+      const r = seeded('win' + i + '-' + idx);
+      const w = s.width * (0.17 + r() * 0.10);
+      const h = w * (0.62 + r() * 0.24);
+      // spread across the width, each in its own horizontal band
+      const bandTop = s.height * (0.08 + i * 0.29);
+      const x = s.width * (0.05 + r() * 0.72);
+      const y = bandTop + r() * s.height * 0.10;
+
+      const left = Math.max(14, Math.min(x, s.width - w - 14));
+      const top = Math.max(14, Math.min(y, s.height - h - 14));
+
+      win.el.style.left = left + 'px';
+      win.el.style.top = top + 'px';
+      win.el.style.width = w + 'px';
+      win.el.style.height = h + 'px';
+
+      // the photograph is drawn at full-frame size and shifted, so the aperture
+      // lands on whatever part of it happens to be there
+      const target = ((idx + 1 + i) % n + n) % n;
+      const item = pool[target];
+      win.el._target = target;
+      win.img.src = 'img/' + item.file;
+      win.img.style.width = s.width + 'px';
+      win.img.style.height = s.height + 'px';
+      win.img.style.left = -left + 'px';
+      win.img.style.top = -top + 'px';
+      win.label.textContent = 'fig.' + item.id;
+    });
   }
 
   // ---------- getting through the collection ----------
   // click anywhere for the next frame, and every ordinary way of moving through a
   // sequence works too, so 139 photographs don't take 139 deliberate clicks
-  zonesEl.addEventListener('click', () => step(1));
+  // clicking the field advances one frame; clicking an aperture jumps to that one
+  stage.addEventListener('click', () => step(1));
 
   window.addEventListener('keydown', (e) => {
     if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ' || e.key === 'Enter') {
@@ -137,7 +197,7 @@
 
   // dragging across the frame scrubs through, for covering ground quickly
   let scrub = null;
-  zonesEl.addEventListener('mousedown', (e) => { scrub = { x: e.clientX, moved: false }; });
+  stage.addEventListener('mousedown', (e) => { scrub = { x: e.clientX, moved: false }; });
   window.addEventListener('mousemove', (e) => {
     if (!scrub) return;
     const dx = e.clientX - scrub.x;

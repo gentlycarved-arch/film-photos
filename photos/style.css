@@ -67,14 +67,58 @@ body{
   background-size:200px 200px;
 }
 
-/* invisible regions, one per exposure: where you point decides which one answers */
-.zones{
+/* apertures cut into the composition: each frames a portion of a photograph
+   further down the sequence, held sharp and clear against the blended field */
+.windows{
   position:absolute;
   inset:0;
   z-index:60;
-  display:grid;
+  pointer-events:none;
 }
-.zone{ cursor:pointer; }
+.window{
+  position:absolute;
+  overflow:hidden;
+  cursor:pointer;
+  pointer-events:auto;
+  outline:1px solid rgba(214,206,192,.5);
+  transition:outline-color .13s linear;
+}
+.window img{
+  position:absolute;
+  display:block;
+  object-fit:cover;
+  opacity:.82;
+  transition:opacity .13s linear;
+}
+.window:hover{ outline-color:rgba(238,232,220,.95); }
+.window:hover img{ opacity:1; }
+
+/* registration marks and the frame number, as on a contact sheet */
+.wtick{
+  position:absolute;
+  width:11px; height:11px;
+  pointer-events:none;
+}
+.wtick::before,.wtick::after{
+  content:"";
+  position:absolute;
+  background:rgba(226,219,205,.72);
+}
+.wtick::before{ top:50%; left:0; width:100%; height:1px; transform:translateY(-50%); }
+.wtick::after{ left:50%; top:0; width:1px; height:100%; transform:translateX(-50%); }
+.wt-tl{ left:-5px; top:-5px; }
+.wt-tr{ right:-5px; top:-5px; }
+.wt-bl{ left:-5px; bottom:-5px; }
+.wt-br{ right:-5px; bottom:-5px; }
+
+.wlabel{
+  position:absolute;
+  left:5px; top:4px;
+  font-size:8.5px;
+  letter-spacing:.12em;
+  color:rgba(232,226,213,.82);
+  pointer-events:none;
+}
 
 /* ---------- side navigation ---------- */
 .nav{
