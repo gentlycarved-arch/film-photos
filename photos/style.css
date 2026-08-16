@@ -164,6 +164,21 @@ body{
 }
 .cell:hover .cell-label{ opacity:1; }
 
+/* a frame chosen for the pairing */
+.cell.picked{ outline:1px solid rgba(238,232,220,.95); outline-offset:-1px; }
+.cell.picked img{ opacity:1; }
+.cell.picked .cell-label{ opacity:1; }
+.pick-mark{
+  position:absolute;
+  top:5px; right:6px;
+  font-size:8px;
+  letter-spacing:.1em;
+  color:rgba(232,226,213,.95);
+  text-shadow:0 1px 3px rgba(0,0,0,.85);
+  display:none;
+}
+.cell.picked .pick-mark{ display:block; }
+
 /* ---------- one photograph, filling the viewport ---------- */
 .viewer{
   position:fixed;
@@ -177,11 +192,28 @@ body{
   cursor:zoom-out;
 }
 .viewer.on{ display:flex; }
-.viewer img{
+.viewer-frame{
+  position:relative;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  isolation:isolate;
+}
+.viewer-frame img{
   max-width:94vw;
   max-height:88vh;
   object-fit:contain;
 }
+/* the second frame lies exactly over the first, additive, as in the main view */
+.viewer-frame img + img{
+  position:absolute;
+  inset:0;
+  margin:auto;
+  display:none;
+  mix-blend-mode:screen;
+}
+.viewer.paired .viewer-frame img{ filter:brightness(.72) contrast(1.1) saturate(.95); }
+.viewer.paired .viewer-frame img + img{ display:block; opacity:.92; }
 .viewer-label{
   margin-top:14px;
   font-size:9px;
@@ -236,6 +268,14 @@ body{
   font-size:9px;
   letter-spacing:.16em;
   color:#453f38;
+}
+.hint{
+  margin-top:8px;
+  font-size:8.5px;
+  line-height:1.6;
+  letter-spacing:.1em;
+  color:#453f38;
+  text-transform:uppercase;
 }
 
 .nav-btn:hover{ color:var(--mark); }

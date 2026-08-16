@@ -8,7 +8,9 @@
   const sheet = document.getElementById('sheet');
   const viewer = document.getElementById('viewer');
   const viewerImg = document.getElementById('viewerImg');
+  const viewerImgB = document.getElementById('viewerImgB');
   const viewerLabel = document.getElementById('viewerLabel');
+  const hint = document.getElementById('hint');
 
   const LAYERS = 4;          // photographs sharing the frame at any moment
   const WINDOWS = 3;         // apertures onto what is coming next
@@ -31,6 +33,7 @@
   let idx = 0;               // index in the pool of the dominant exposure
   let view = 'exposure';     // 'exposure' or 'sheet'
   let openAt = -1;           // index open in the full-viewport viewer, -1 if closed
+  let picked = [];           // frames chosen in the grid to expose over one another
 
   fetch('manifest.json')
     .then((r) => r.json())
@@ -185,9 +188,11 @@
   window.addEventListener('keydown', (e) => {
     // with a photograph open, the arrows walk the collection inside the viewer
     if (openAt >= 0) {
-      if (e.key === 'Escape') { e.preventDefault(); closeViewer(); }
-      else if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') { e.preventDefault(); openViewer(openAt + 1); }
-      else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); openViewer(openAt - 1); }
+      if (e.key === 'Escape') { e.preventDefault(); closeViewer(true); return; }
+      // a pair is a composition, not a position in the sequence: leave it be
+      if (viewer.classList.contains('paired')) return;
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') { e.preventDefault(); picked = []; openViewer(openAt + 1); }
+      else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); picked = []; openViewer(openAt - 1); }
       return;
     }
     if (view !== 'exposure') return;
@@ -240,32 +245,90 @@
       label.className = 'cell-label';
       label.textContent = 'fig.' + item.id;
       cell.appendChild(label);
-      cell.addEventListener('click', () => openViewer(i));
+      const mark = document.createElement('div');
+      mark.className = 'pick-mark';
+      cell.appendChild(mark);
+      cell.addEventListener('click', () => choose(i));
       sheet.appendChild(cell);
     });
+    picked = [];
+    paintPicks();
   }
 
-  function openViewer(i) {
+  // Two frames chosen in the grid are exposed over one another, the same way the
+  // layers combine in the other view. Choosing one on its own just shows it.
+  function choose(i) {
+    const at = picked.indexOf(i);
+    if (at >= 0) {                      // clicking a chosen frame lets it go
+      picked.splice(at, 1);
+      paintPicks();
+      return;
+    }
+    picked.push(i);
+    if (picked.length === 1) {
+      paintPicks();
+      openViewer(picked[0]);            // seen on its own until a second is chosen
+      return;
+    }
+    picked = picked.slice(-2);
+    paintPicks();
+    openViewer(picked[0], picked[1]);
+  }
+
+  function paintPicks() {
+    [...sheet.children].forEach((cell, i) => {
+      const at = picked.indexOf(i);
+      cell.classList.toggle('picked', at >= 0);
+      const mark = cell.querySelector('.pick-mark');
+      if (mark) mark.textContent = at >= 0 ? String(at + 1) : '';
+    });
+    updateHint();
+  }
+
+  function updateHint() {
+    if (view !== 'sheet') { hint.textContent = ''; return; }
+    hint.textContent = picked.length === 1
+      ? 'pick a second to expose over it'
+      : 'pick two to combine';
+  }
+
+  function openViewer(i, j) {
     const n = pool.length;
     openAt = ((i % n) + n) % n;
     const item = pool[openAt];
     viewerImg.src = 'img/' + item.file;
-    viewerLabel.textContent =
-      'fig.' + item.id + '  ·  ' + String(openAt + 1).padStart(3, '0') + ' / ' + String(n).padStart(3, '0');
+
+    const paired = j != null;
+    viewer.classList.toggle('paired', paired);
+    if (paired) {
+      const other = pool[((j % n) + n) % n];
+      viewerImgB.src = 'img/' + other.file;
+      viewerLabel.textContent = 'fig.' + item.id + '  ×  fig.' + other.id;
+    } else {
+      viewerImgB.removeAttribute('src');
+      viewerLabel.textContent =
+        'fig.' + item.id + '  ·  ' + String(openAt + 1).padStart(3, '0') + ' / ' + String(n).padStart(3, '0');
+    }
     viewer.classList.add('on');
   }
-  function closeViewer() { openAt = -1; viewer.classList.remove('on'); }
-  viewer.addEventListener('click', closeViewer);
+
+  function closeViewer(clearPicks) {
+    openAt = -1;
+    viewer.classList.remove('on', 'paired');
+    if (clearPicks !== false) { picked = []; if (view === 'sheet') paintPicks(); }
+  }
+  viewer.addEventListener('click', () => closeViewer(true));
 
   function setView(next) {
     view = next;
-    closeViewer();
+    closeViewer(true);
     const onSheet = view === 'sheet';
     sheet.classList.toggle('on', onSheet);
     stage.style.display = onSheet ? 'none' : '';
     counter.style.visibility = onSheet ? 'hidden' : '';
     if (onSheet) buildSheet();
     else render();
+    updateHint();
   }
 
   views.addEventListener('click', (e) => {
@@ -288,8 +351,9 @@
     layers.forEach((l) => { l.file = null; });
     idx = Math.min(LAYERS - 1, pool.length - 1);
     hovered = -1;
-    closeViewer();
+    closeViewer(true);
     if (view === 'sheet') buildSheet();
     else render();
+    updateHint();
   });
 })();
