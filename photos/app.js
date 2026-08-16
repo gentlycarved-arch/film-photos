@@ -103,7 +103,7 @@
     const a = rolls.a.items[rolls.a.chosen];
     const b = rolls.b.items[rolls.b.chosen];
     if (!a || !b) return;
-    readout.textContent = 'fig.' + a.id + '  +  fig.' + b.id;
+    readout.textContent = a.id + '  +  ' + b.id;
     // a brief lift on the border as the pair meets
     pairbox.classList.remove('fresh');
     void pairbox.offsetWidth;
@@ -125,7 +125,7 @@
       cell.appendChild(img);
       const label = document.createElement('div');
       label.className = 'cell-label';
-      label.textContent = 'fig.' + item.id;
+      label.textContent = item.id;
       cell.appendChild(label);
       cell.addEventListener('click', () => openViewer(i));
       sheet.appendChild(cell);
@@ -138,7 +138,7 @@
     const item = everything[openAt];
     viewerImg.src = 'img/' + item.file;
     viewerLabel.textContent =
-      'fig.' + item.id + '  ·  ' + String(openAt + 1).padStart(3, '0') + ' / ' + String(n).padStart(3, '0');
+      item.id + '  ·  ' + String(openAt + 1).padStart(3, '0') + ' / ' + String(n).padStart(3, '0');
     viewer.classList.add('on');
   }
   function closeViewer() { openAt = -1; viewer.classList.remove('on'); }

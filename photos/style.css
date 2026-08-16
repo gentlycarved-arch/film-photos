@@ -38,7 +38,7 @@ body{
   aspect-ratio:3 / 2;
   max-height:calc(100vh - var(--rolls-h) - 76px);
   background:#000;
-  border:1px solid rgba(226,217,199,.4);
+  border:1px solid rgba(226,217,199,.5);
   box-shadow:0 0 0 5px rgba(11,10,9,.9), 0 0 22px rgba(238,229,210,.05);
   transition:box-shadow .5s ease, border-color .5s ease;
 }
@@ -55,17 +55,20 @@ body{
 .pairbox::after{
   content:"";
   position:absolute;
-  inset:-1px;
-  padding:1px;
+  inset:-2px;
+  padding:2px;
   pointer-events:none;
   background:conic-gradient(from var(--sweep),
-    rgba(244,237,222,0) 0deg,
-    rgba(244,237,222,.85) 26deg,
-    rgba(244,237,222,0) 74deg,
-    rgba(244,237,222,0) 190deg,
-    rgba(244,237,222,.4) 214deg,
-    rgba(244,237,222,0) 258deg,
-    rgba(244,237,222,0) 360deg);
+    rgba(248,242,229,0) 0deg,
+    rgba(255,251,242,1) 24deg,
+    rgba(248,242,229,.25) 76deg,
+    rgba(248,242,229,0) 150deg,
+    rgba(248,242,229,0) 186deg,
+    rgba(255,251,242,.7) 208deg,
+    rgba(248,242,229,.2) 254deg,
+    rgba(248,242,229,0) 320deg,
+    rgba(248,242,229,0) 360deg);
+  filter:drop-shadow(0 0 7px rgba(250,244,231,.55));
   -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   -webkit-mask-composite:xor;
   mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
