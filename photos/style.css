@@ -2,7 +2,7 @@
   --bg:#0d0c0b;
   --mark:#8a857b;
   --text-dim:#6f6a61;
-  --nav-w:118px;
+  --nav-w:172px;
 }
 
 *{box-sizing:border-box}
@@ -179,36 +179,48 @@ body{
   display:flex;
   flex-direction:column;
   justify-content:center;
-  gap:11px;
-  padding:20px 16px;
+  gap:6px;
+  padding:22px 16px;
   z-index:200;
 }
+/* pill buttons, each carrying its own radio */
 .nav-btn{
   font:inherit;
-  font-size:9.5px;
-  text-transform:uppercase;
-  letter-spacing:.13em;
+  font-size:10px;
+  letter-spacing:.02em;
   text-align:left;
-  padding:0;
+  padding:7px 12px;
   border:none;
-  background:none;
-  color:var(--text-dim);
+  border-radius:999px;
+  background:rgba(255,253,247,.045);
+  color:#7d776d;
   cursor:pointer;
   display:flex;
   align-items:center;
   gap:8px;
-  transition:color .15s ease;
+  width:100%;
+  transition:background .15s ease, color .15s ease;
 }
 .nav-btn::before{
   content:"";
-  width:4px; height:4px;
+  width:9px; height:9px;
   border-radius:50%;
-  border:1px solid var(--text-dim);
+  border:1px solid #57514a;
+  background:transparent;
   flex:0 0 auto;
-  transition:background .15s ease, border-color .15s ease;
+  box-shadow:inset 0 0 0 2px transparent;
+  transition:box-shadow .15s ease, border-color .15s ease;
 }
-.nav-group{ display:flex; flex-direction:column; gap:11px; }
-.nav-rule{ height:1px; background:#24211d; margin:16px 0; }
+.nav-group{ display:flex; flex-direction:column; gap:6px; }
+.nav-rule{ height:1px; background:#24211d; margin:14px 0; }
+
+.nav-desc{
+  margin:18px 0 0 0;
+  font-size:9.5px;
+  line-height:1.65;
+  letter-spacing:.02em;
+  color:#5e584f;
+}
 
 .counter{
   margin-top:18px;
@@ -225,9 +237,12 @@ body{
   text-transform:uppercase;
 }
 
-.nav-btn:hover{ color:var(--mark); }
-.nav-btn.active{ color:#cfc9bd; }
-.nav-btn.active::before{ background:#cfc9bd; border-color:#cfc9bd; }
+.nav-btn:hover{ background:rgba(255,253,247,.08); color:#a9a297; }
+.nav-btn.active{ background:rgba(255,253,247,.14); color:#efe9dd; }
+.nav-btn.active::before{
+  border-color:#efe9dd;
+  box-shadow:inset 0 0 0 2px #efe9dd;
+}
 
 @media(max-width:760px){
   :root{--nav-w:0px}
