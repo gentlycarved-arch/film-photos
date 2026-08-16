@@ -3,12 +3,7 @@
   const exposuresEl = document.getElementById('exposures');
   const windowsEl = document.getElementById('windows');
   const nav = document.getElementById('nav');
-  const views = document.getElementById('views');
   const counter = document.getElementById('counter');
-  const sheet = document.getElementById('sheet');
-  const viewer = document.getElementById('viewer');
-  const viewerImg = document.getElementById('viewerImg');
-  const viewerLabel = document.getElementById('viewerLabel');
 
   const LAYERS = 4;          // photographs sharing the frame at any moment
   const WINDOWS = 3;         // apertures onto what is coming next
@@ -29,8 +24,6 @@
   let windows = [];
   let hovered = -1;
   let idx = 0;               // index in the pool of the dominant exposure
-  let view = 'exposure';     // 'exposure' or 'sheet'
-  let openAt = -1;           // index open in the full-viewport viewer, -1 if closed
 
   fetch('manifest.json')
     .then((r) => r.json())
@@ -183,14 +176,6 @@
   stage.addEventListener('click', () => step(1));
 
   window.addEventListener('keydown', (e) => {
-    // with a photograph open, the arrows walk the collection inside the viewer
-    if (openAt >= 0) {
-      if (e.key === 'Escape') { e.preventDefault(); closeViewer(); }
-      else if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') { e.preventDefault(); openViewer(openAt + 1); }
-      else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); openViewer(openAt - 1); }
-      return;
-    }
-    if (view !== 'exposure') return;
     if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ' || e.key === 'Enter') {
       e.preventDefault(); step(1);
     } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
@@ -202,7 +187,6 @@
 
   let wheelAcc = 0, wheelLock = false;
   window.addEventListener('wheel', (e) => {
-    if (view !== 'exposure' || openAt >= 0) return;   // the grid scrolls normally
     wheelAcc += e.deltaY || e.deltaX;
     if (wheelLock || Math.abs(wheelAcc) < 40) return;
     step(wheelAcc > 0 ? 1 : -1);
@@ -225,61 +209,11 @@
   });
   window.addEventListener('mouseup', () => { scrub = null; });
 
-  // ---------- the grid, and one photograph filling the viewport ----------
-  function buildSheet() {
-    sheet.innerHTML = '';
-    pool.forEach((item, i) => {
-      const cell = document.createElement('div');
-      cell.className = 'cell';
-      const img = document.createElement('img');
-      img.src = 'img-grid/' + item.file;
-      img.loading = 'lazy';
-      img.alt = '';
-      cell.appendChild(img);
-      const label = document.createElement('div');
-      label.className = 'cell-label';
-      label.textContent = 'fig.' + item.id;
-      cell.appendChild(label);
-      cell.addEventListener('click', () => openViewer(i));
-      sheet.appendChild(cell);
-    });
-  }
-
-  function openViewer(i) {
-    const n = pool.length;
-    openAt = ((i % n) + n) % n;
-    const item = pool[openAt];
-    viewerImg.src = 'img/' + item.file;
-    viewerLabel.textContent =
-      'fig.' + item.id + '  ·  ' + String(openAt + 1).padStart(3, '0') + ' / ' + String(n).padStart(3, '0');
-    viewer.classList.add('on');
-  }
-  function closeViewer() { openAt = -1; viewer.classList.remove('on'); }
-  viewer.addEventListener('click', closeViewer);
-
-  function setView(next) {
-    view = next;
-    closeViewer();
-    const onSheet = view === 'sheet';
-    sheet.classList.toggle('on', onSheet);
-    stage.style.display = onSheet ? 'none' : '';
-    counter.style.visibility = onSheet ? 'hidden' : '';
-    if (onSheet) buildSheet();
-    else render();
-  }
-
-  views.addEventListener('click', (e) => {
-    const btn = e.target.closest('.nav-btn');
-    if (!btn) return;
-    [...views.querySelectorAll('.nav-btn')].forEach((b) => b.classList.toggle('active', b === btn));
-    setView(btn.dataset.view);
-  });
-
   // ---------- side navigation ----------
   nav.addEventListener('click', (e) => {
     const btn = e.target.closest('.nav-btn');
-    if (!btn || !btn.dataset.cat) return;
-    [...nav.querySelectorAll('.nav-btn[data-cat]')].forEach((b) => b.classList.toggle('active', b === btn));
+    if (!btn) return;
+    [...nav.querySelectorAll('.nav-btn')].forEach((b) => b.classList.toggle('active', b === btn));
 
     const cat = btn.dataset.cat;
     pool = cat === 'all' ? all.slice() : all.filter((p) => (p.categories || []).includes(cat));
@@ -288,8 +222,6 @@
     layers.forEach((l) => { l.file = null; });
     idx = Math.min(LAYERS - 1, pool.length - 1);
     hovered = -1;
-    closeViewer();
-    if (view === 'sheet') buildSheet();
-    else render();
+    render();
   });
 })();
