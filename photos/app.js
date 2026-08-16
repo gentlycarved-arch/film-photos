@@ -1,7 +1,6 @@
 (function () {
   const stage = document.getElementById('stage');
   const exposuresEl = document.getElementById('exposures');
-  const windowsEl = document.getElementById('windows');
   const nav = document.getElementById('nav');
   const views = document.getElementById('views');
   const counter = document.getElementById('counter');
@@ -12,23 +11,19 @@
   const viewerLabel = document.getElementById('viewerLabel');
   const hint = document.getElementById('hint');
 
-  const LAYERS = 4;          // photographs sharing the frame at any moment
-  const WINDOWS = 3;         // apertures onto what is coming next
+  const LAYERS = 2;          // two photographs share the frame at a time
 
   // Every layer is additive over black, the way stacked exposures build up on one
   // frame of film: highlights accumulate, shadows let whatever is beneath show through.
   const ROLES = [
-    { opacity: 0.94, blend: 'screen' },
-    { opacity: 0.46, blend: 'screen' },
-    { opacity: 0.36, blend: 'screen' },
-    { opacity: 0.28, blend: 'screen' },
+    { opacity: 0.90, blend: 'screen' },
+    { opacity: 0.66, blend: 'screen' },
   ];
   const HOVER_LIFT = 0.16;   // how much pointing at a layer brings it up
 
   let all = [];
   let pool = [];
   let layers = [];           // in stacking order, 0 = dominant
-  let windows = [];
   let hovered = -1;
   let idx = 0;               // index in the pool of the dominant exposure
   let view = 'exposure';     // 'exposure' or 'sheet'
@@ -41,7 +36,6 @@
       all = manifest;
       pool = manifest.slice();
       for (let i = 0; i < LAYERS; i++) layers.push(makeLayer());
-      buildWindows();
       idx = LAYERS - 1;
       render();
     })
@@ -82,8 +76,8 @@
     };
   }
 
-  // Draw the stack from the current position: the dominant exposure plus the three
-  // frames behind it. Everything is addressed by index, so it reads in both directions.
+  // Draw the pair from the current position. Everything is addressed by index, so
+  // the sequence reads in both directions.
   function render() {
     const n = pool.length;
     layers.forEach((layer, i) => {
@@ -103,9 +97,10 @@
       layer.el.style.opacity = Math.min(1, role.opacity + lift).toFixed(3);
       layer.el.classList.toggle('dominant', i === 0);
     });
+    const back = ((idx - LAYERS + 1) % n + n) % n;
     counter.textContent =
-      String(idx + 1).padStart(3, '0') + ' / ' + String(pool.length).padStart(3, '0');
-    placeWindows();
+      String(back + 1).padStart(3, '0') + '\u2013' + String(idx + 1).padStart(3, '0') +
+      ' / ' + String(pool.length).padStart(3, '0');
   }
 
   function step(d) {
@@ -114,76 +109,10 @@
     render();
   }
 
-  // Apertures onto photographs further down the sequence. Each shows the part of a
-  // frame that would fall in that spot were it full-bleed, so the window reads as a
-  // hole cut in the composition rather than a thumbnail pasted on top.
-  function buildWindows() {
-    for (let i = 0; i < WINDOWS; i++) {
-      const w = document.createElement('div');
-      w.className = 'window';
-      const img = document.createElement('img');
-      img.alt = '';
-      w.appendChild(img);
-      const label = document.createElement('div');
-      label.className = 'wlabel';
-      w.appendChild(label);
-      ['tl', 'tr', 'bl', 'br'].forEach((c) => {
-        const t = document.createElement('span');
-        t.className = 'wtick wt-' + c;
-        w.appendChild(t);
-      });
-      w.addEventListener('click', (e) => {
-        e.stopPropagation();
-        if (w._target != null) { idx = w._target; render(); }
-      });
-      windowsEl.appendChild(w);
-      windows.push({ el: w, img, label });
-    }
-    window.addEventListener('resize', placeWindows);
-  }
-
-  function placeWindows() {
-    const s = stage.getBoundingClientRect();
-    const n = pool.length;
-    if (!n) return;
-
-    windows.forEach((win, i) => {
-      // positions shift as you move through, so the apertures never sit in a fixed grid
-      const r = seeded('win' + i + '-' + idx);
-      const w = s.width * (0.17 + r() * 0.10);
-      const h = w * (0.62 + r() * 0.24);
-      // spread across the width, each in its own horizontal band
-      const bandTop = s.height * (0.08 + i * 0.29);
-      const x = s.width * (0.05 + r() * 0.72);
-      const y = bandTop + r() * s.height * 0.10;
-
-      const left = Math.max(14, Math.min(x, s.width - w - 14));
-      const top = Math.max(14, Math.min(y, s.height - h - 14));
-
-      win.el.style.left = left + 'px';
-      win.el.style.top = top + 'px';
-      win.el.style.width = w + 'px';
-      win.el.style.height = h + 'px';
-
-      // the photograph is drawn at full-frame size and shifted, so the aperture
-      // lands on whatever part of it happens to be there
-      const target = ((idx + 1 + i) % n + n) % n;
-      const item = pool[target];
-      win.el._target = target;
-      win.img.src = 'img/' + item.file;
-      win.img.style.width = s.width + 'px';
-      win.img.style.height = s.height + 'px';
-      win.img.style.left = -left + 'px';
-      win.img.style.top = -top + 'px';
-      win.label.textContent = 'fig.' + item.id;
-    });
-  }
-
   // ---------- getting through the collection ----------
-  // click anywhere for the next frame, and every ordinary way of moving through a
-  // sequence works too, so 139 photographs don't take 139 deliberate clicks
-  // clicking the field advances one frame; clicking an aperture jumps to that one
-  stage.addEventListener('click', () => step(1));
+  // A click moves the whole pair on, so both photographs change together and the
+  // next click brings an entirely new exposure rather than half of the last one.
+  stage.addEventListener('click', () => step(LAYERS));
 
   window.addEventListener('keydown', (e) => {
     // with a photograph open, the arrows walk the collection inside the viewer
@@ -197,9 +126,9 @@
     }
     if (view !== 'exposure') return;
     if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ' || e.key === 'Enter') {
-      e.preventDefault(); step(1);
+      e.preventDefault(); step(LAYERS);
     } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
-      e.preventDefault(); step(-1);
+      e.preventDefault(); step(-LAYERS);
     } else if (e.key === 'Home') {
       e.preventDefault(); idx = LAYERS - 1; render();
     }
@@ -210,7 +139,7 @@
     if (view !== 'exposure' || openAt >= 0) return;   // the grid scrolls normally
     wheelAcc += e.deltaY || e.deltaX;
     if (wheelLock || Math.abs(wheelAcc) < 40) return;
-    step(wheelAcc > 0 ? 1 : -1);
+    step(wheelAcc > 0 ? LAYERS : -LAYERS);
     wheelAcc = 0;
     wheelLock = true;
     setTimeout(() => { wheelLock = false; }, 90);
@@ -223,7 +152,7 @@
     if (!scrub) return;
     const dx = e.clientX - scrub.x;
     if (Math.abs(dx) >= 46) {
-      step(dx > 0 ? 1 : -1);
+      step(dx > 0 ? LAYERS : -LAYERS);
       scrub.x = e.clientX;
       scrub.moved = true;
     }
