@@ -125,38 +125,26 @@
     trackRing();
   }
 
-  // One border enclosing both chosen frames, drawn round the pair rather than round
-  // each of them. It follows while the rolls are still sliding.
-  let ringRaf = 0;
+  // One border enclosing both chosen frames. It is drawn where the pair comes to
+  // rest — the middle of the screen — rather than around wherever the frames happen
+  // to be, so it stays put while they slide in instead of stretching across the gap.
   function drawRing() {
     const fa = rolls.a.strip.children[rolls.a.chosen];
     const fb = rolls.b.strip.children[rolls.b.chosen];
     if (!fa || !fb) { pairring.classList.remove('on'); return; }
     const ra = fa.getBoundingClientRect();
     const rb = fb.getBoundingClientRect();
-    const left = Math.min(ra.left, rb.left);
-    const right = Math.max(ra.right, rb.right);
-    const top = Math.min(ra.top, rb.top);
-    const bottom = Math.max(ra.bottom, rb.bottom);
-    pairring.style.left = (left - 3) + 'px';
-    pairring.style.top = (top - 3) + 'px';
-    pairring.style.width = (right - left + 6) + 'px';
-    pairring.style.height = (bottom - top + 6) + 'px';
+    // vertical placement holds however far the rolls have scrolled sideways
+    const w = Math.max(fa.offsetWidth, fb.offsetWidth);
+    const centre = rolls.a.strip.getBoundingClientRect().left + rolls.a.strip.clientWidth / 2;
+    pairring.style.left = Math.round(centre - w / 2 - 3) + 'px';
+    pairring.style.top = Math.round(ra.top - 3) + 'px';
+    pairring.style.width = (w + 6) + 'px';
+    pairring.style.height = Math.round(rb.bottom - ra.top + 6) + 'px';
     pairring.classList.add('on');
   }
 
-  // while a roll is easing into place the ring has to keep up, so follow the frames
-  function trackRing() {
-    cancelAnimationFrame(ringRaf);
-    const until = performance.now() + 700;
-    const tick = () => {
-      drawRing();
-      if (performance.now() < until) ringRaf = requestAnimationFrame(tick);
-    };
-    tick();
-  }
-
-  [stripA, stripB].forEach((s) => s.addEventListener('scroll', drawRing, { passive: true }));
+  const trackRing = drawRing;
   window.addEventListener('resize', drawRing);
 
   function say() {

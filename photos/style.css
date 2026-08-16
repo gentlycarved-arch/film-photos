@@ -84,11 +84,9 @@ body{
   z-index:30;
   border:1px solid rgba(232,224,206,.65);
   opacity:0;
-  transition:left .34s cubic-bezier(.2,.72,.24,1),
-             top .34s cubic-bezier(.2,.72,.24,1),
-             width .34s cubic-bezier(.2,.72,.24,1),
-             height .34s cubic-bezier(.2,.72,.24,1),
-             opacity .2s linear;
+  /* the box itself never animates: it sits where the pair will come to rest, so it
+     cannot be seen stretching between two frames that are still sliding */
+  transition:opacity .2s linear, border-color .3s ease, box-shadow .3s ease;
 }
 .pairring.on{ opacity:1; }
 /* a brief lift as a new pair comes together */
