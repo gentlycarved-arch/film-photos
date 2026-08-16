@@ -5,6 +5,7 @@
   const stripB = document.getElementById('stripB');
   const shuffle = document.getElementById('shuffle');
   const readout = document.getElementById('readout');
+  const pairbox = document.getElementById('pairbox');
   const views = document.getElementById('views');
   const sheet = document.getElementById('sheet');
   const viewer = document.getElementById('viewer');
@@ -103,6 +104,12 @@
     const b = rolls.b.items[rolls.b.chosen];
     if (!a || !b) return;
     readout.textContent = 'fig.' + a.id + '  +  fig.' + b.id;
+    // a brief lift on the border as the pair meets
+    pairbox.classList.remove('fresh');
+    void pairbox.offsetWidth;
+    pairbox.classList.add('fresh');
+    clearTimeout(say._t);
+    say._t = setTimeout(() => pairbox.classList.remove('fresh'), 620);
   }
 
   // ---------- the grid, and one photograph filling the viewport ----------

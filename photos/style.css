@@ -30,16 +30,58 @@ body{
 
 /* the two chosen frames come together inside one border, so the pair reads as a
    single photographic object rather than two images that happen to overlap */
+@property --sweep{ syntax:'<angle>'; inherits:false; initial-value:0deg; }
+
 .pairbox{
   position:relative;
   width:min(74vw, 1080px);
   aspect-ratio:3 / 2;
   max-height:calc(100vh - var(--rolls-h) - 76px);
+  background:#000;
+  border:1px solid rgba(226,217,199,.4);
+  box-shadow:0 0 0 5px rgba(11,10,9,.9), 0 0 22px rgba(238,229,210,.05);
+  transition:box-shadow .5s ease, border-color .5s ease;
+}
+/* the frames themselves are clipped inside, so the border and its light can sit
+   outside the picture and still travel round it */
+.pairclip{
+  position:absolute;
+  inset:0;
   overflow:hidden;
   isolation:isolate;
-  background:#000;
-  border:1px solid rgba(226,217,199,.55);
-  box-shadow:0 0 0 5px rgba(11,10,9,.9);
+}
+
+/* a soft light that keeps travelling round the border of a chosen pair */
+.pairbox::after{
+  content:"";
+  position:absolute;
+  inset:-1px;
+  padding:1px;
+  pointer-events:none;
+  background:conic-gradient(from var(--sweep),
+    rgba(244,237,222,0) 0deg,
+    rgba(244,237,222,.85) 26deg,
+    rgba(244,237,222,0) 74deg,
+    rgba(244,237,222,0) 190deg,
+    rgba(244,237,222,.4) 214deg,
+    rgba(244,237,222,0) 258deg,
+    rgba(244,237,222,0) 360deg);
+  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;
+  mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite:exclude;
+  animation:sweep 7s linear infinite;
+}
+@keyframes sweep{ to{ --sweep:360deg; } }
+
+/* and a brief lift the moment a new pair comes together */
+.pairbox.fresh{
+  border-color:rgba(240,232,215,.8);
+  box-shadow:0 0 0 5px rgba(11,10,9,.9), 0 0 34px rgba(240,232,215,.16);
+}
+
+@media(prefers-reduced-motion:reduce){
+  .pairbox::after{ animation:none; }
 }
 
 .plate{
