@@ -6,6 +6,12 @@
   const counter = document.getElementById('counter');
   const sheet = document.getElementById('sheet');
   const pair = document.getElementById('pair');
+  const strips = document.getElementById('strips');
+  const stripA = document.getElementById('stripA');
+  const stripB = document.getElementById('stripB');
+  const rings = document.getElementById('rings');
+  const ringA = document.getElementById('ringA');
+  const ringB = document.getElementById('ringB');
   const pairA = document.getElementById('pgridA');
   const pairB = document.getElementById('pgridB');
   const viewer = document.getElementById('viewer');
@@ -162,6 +168,105 @@
   });
   window.addEventListener('mouseup', () => { scrub = null; });
 
+  // ---------- two photographic sequences ----------
+  // Each line runs its own way through the collection, so the two are never showing
+  // the same frames. Advancing them by different amounts keeps bringing new pairs
+  // of photographs into the same piece of screen.
+  const SEQ_COUNT = 9;
+  let seqA = 0, seqB = 5;
+  let seqShift = 0;             // how far the second sequence is pushed along by hand
+
+  function seqFrame(item) {
+    const frame = document.createElement('div');
+    frame.className = 'frame';
+    const img = document.createElement('img');
+    img.src = 'img-grid/' + item.file;
+    img.alt = '';
+    frame.appendChild(img);
+    const label = document.createElement('div');
+    label.className = 'seq-label';
+    label.textContent = 'fig.' + item.id;
+    frame.appendChild(label);
+    return frame;
+  }
+
+  function buildStrips() {
+    const n = pool.length;
+    [[stripA, seqA, 1], [stripB, seqB, -1]].forEach(([el, start]) => {
+      el.innerHTML = '';
+      for (let i = 0; i < SEQ_COUNT; i++) {
+        el.appendChild(seqFrame(pool[(start + i) % n]));
+      }
+    });
+    applyStripShift();
+  }
+
+  function applyStripShift() {
+    const w = strips.getBoundingClientRect().width;
+    // the second line starts part of a frame along, so nothing lines up squarely
+    stripA.style.transform = 'translateX(' + (-w * 0.12) + 'px)';
+    stripB.style.transform = 'translateX(' + (-w * 0.38 + seqShift) + 'px)';
+  }
+
+  function buildRings() {
+    const n = pool.length;
+    const r = rings.getBoundingClientRect();
+    const unit = Math.min(r.width, r.height);
+
+    [[ringA, seqA, unit * 0.30, 0], [ringB, seqB, unit * 0.40, 180 / SEQ_COUNT]]
+      .forEach(([el, start, radius, twist]) => {
+        el.innerHTML = '';
+        const w = unit * 0.30;
+        const h = radius * 1.55;         // long enough that the inner ends pile up in the middle
+        for (let i = 0; i < SEQ_COUNT; i++) {
+          const f = seqFrame(pool[(start + i) % n]);
+          f.style.width = w + 'px';
+          f.style.height = h + 'px';
+          f.style.left = (-w / 2) + 'px';
+          f.style.top = (-h) + 'px';
+          f.style.transform = 'rotate(' + (i * (360 / SEQ_COUNT) + twist) + 'deg)';
+          el.appendChild(f);
+        }
+      });
+    applyRingShift();
+  }
+
+  function applyRingShift() {
+    ringB.style.transform = 'rotate(' + (seqShift * 0.12) + 'deg)';
+  }
+
+  function advanceSeq() {
+    const n = pool.length;
+    // different strides, so the pairing changes rather than the whole thing sliding
+    seqA = (seqA + 1) % n;
+    seqB = (seqB + 2) % n;
+    if (view === 'strips') buildStrips(); else buildRings();
+  }
+
+  // a click changes the pairing; dragging nudges one sequence against the other
+  let seqDrag = null;
+  [strips, rings].forEach((host) => {
+    host.addEventListener('mousedown', (e) => {
+      seqDrag = { x: e.clientX, from: seqShift, moved: false };
+    });
+    host.addEventListener('click', () => {
+      if (seqDrag && seqDrag.moved) return;
+      advanceSeq();
+    });
+  });
+  window.addEventListener('mousemove', (e) => {
+    if (!seqDrag) return;
+    const dx = e.clientX - seqDrag.x;
+    if (!seqDrag.moved && Math.abs(dx) > 3) seqDrag.moved = true;
+    if (!seqDrag.moved) return;
+    seqShift = seqDrag.from + dx;
+    if (view === 'strips') applyStripShift(); else applyRingShift();
+  });
+  window.addEventListener('mouseup', () => {
+    if (!seqDrag) return;
+    setTimeout(() => { seqDrag = null; }, 0);
+  });
+
   // ---------- two contact sheets, one over the other ----------
   const PAIR_COLS = 4, PAIR_ROWS = 3;
   const PAIR_CELLS = PAIR_COLS * PAIR_ROWS;
@@ -297,6 +402,10 @@
   }
 
   function updateHint() {
+    if (view === 'strips' || view === 'rings') {
+      hint.textContent = 'click for a new pairing \u00b7 drag to offset one sequence';
+      return;
+    }
     if (view === 'pair') { hint.textContent = 'drag to slide one sheet over the other'; return; }
     if (view !== 'sheet') { hint.textContent = ''; return; }
     hint.textContent = picked.length === 1
@@ -336,10 +445,14 @@
     closeViewer(true);
     sheet.classList.toggle('on', view === 'sheet');
     pair.classList.toggle('on', view === 'pair');
+    strips.classList.toggle('on', view === 'strips');
+    rings.classList.toggle('on', view === 'rings');
     stage.style.display = view === 'exposure' ? '' : 'none';
     counter.style.visibility = view === 'exposure' ? '' : 'hidden';
     if (view === 'sheet') buildSheet();
     else if (view === 'pair') buildPair();
+    else if (view === 'strips') buildStrips();
+    else if (view === 'rings') buildRings();
     else render();
     updateHint();
   }
@@ -367,6 +480,8 @@
     closeViewer(true);
     if (view === 'sheet') buildSheet();
     else if (view === 'pair') buildPair();
+    else if (view === 'strips') buildStrips();
+    else if (view === 'rings') buildRings();
     else render();
     updateHint();
   });

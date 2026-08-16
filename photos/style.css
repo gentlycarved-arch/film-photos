@@ -67,6 +67,66 @@ body{
   background-size:200px 200px;
 }
 
+/* ---------- two photographic sequences, laid across one another ---------- */
+.strips, .rings{
+  position:fixed;
+  top:0; left:0; bottom:0;
+  right:var(--nav-w);
+  overflow:hidden;
+  display:none;
+  background:var(--bg);
+  isolation:isolate;
+  cursor:ew-resize;
+}
+.strips.on, .rings.on{ display:block; }
+
+/* each sequence is one continuous run of frames, taller than it needs to be so the
+   two bands cross in the middle of the screen */
+.strip{
+  position:absolute;
+  left:0;
+  display:flex;
+  align-items:stretch;
+  will-change:transform;
+}
+.strip-a{ top:4%;  height:58%; }
+.strip-b{ top:33%; height:58%; mix-blend-mode:screen; }
+
+.strip .frame{ flex:0 0 auto; height:100%; position:relative; }
+.strip img{ display:block; height:100%; width:auto; }
+.strip-a img{ filter:brightness(.78) contrast(1.06) saturate(.95); }
+.strip-b img{ filter:brightness(.66) contrast(1.08) saturate(.93); }
+
+/* ---------- the same two sequences, bent into rings ---------- */
+.ring{
+  position:absolute;
+  left:50%; top:50%;
+  width:0; height:0;
+  will-change:transform;
+}
+.ring-b{ mix-blend-mode:screen; }
+.ring .frame{
+  position:absolute;
+  transform-origin:50% 100%;   /* the inner edge, so the frames fan from the centre */
+}
+.ring img{ display:block; width:100%; height:100%; object-fit:cover; }
+.ring-a img{ filter:brightness(.74) contrast(1.06) saturate(.95); }
+.ring-b img{ filter:brightness(.6) contrast(1.08) saturate(.92); }
+
+/* the frame number, only close up */
+.seq-label{
+  position:absolute;
+  left:6px; top:5px;
+  font-size:8px;
+  letter-spacing:.12em;
+  color:rgba(236,230,218,.85);
+  text-shadow:0 1px 3px rgba(0,0,0,.85);
+  opacity:0;
+  transition:opacity .12s linear;
+  pointer-events:none;
+}
+.frame:hover .seq-label{ opacity:1; }
+
 /* ---------- two contact sheets printed on transparent material ---------- */
 .pair{
   position:fixed;
