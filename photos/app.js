@@ -19,10 +19,10 @@
 
   const rolls = {
     a: { strip: stripA, plate: plateA, items: [], chosen: null, imgs: [], slot: 0, gen: 0,
-         enter: 'translateX(-4%)', rest: 'translateX(0)' },
+         enter: 'translateX(-48%)', rest: 'translateX(0)' },
     b: { strip: stripB, plate: plateB, items: [], chosen: null, imgs: [], slot: 0, gen: 0,
          // the second never lands quite square on the first
-         enter: 'translateX(4%) scale(1.05)', rest: 'translateX(0.9%) translateY(-0.7%) scale(1.05)' },
+         enter: 'translateX(48%) scale(1.05)', rest: 'translateX(0.9%) translateY(-0.7%) scale(1.05)' },
   };
 
   fetch('manifest.json')
@@ -97,11 +97,16 @@
     const done = () => {
       if (gen !== roll.gen) return;        // a later choice already won
       roll.slot ^= 1;
-      // start it off to its own side, then let it travel in to meet the other
-      incoming.style.transform = roll.enter;
-      void incoming.offsetWidth;           // commit that position before animating
-      incoming.classList.add('showing');
+      // Travel in from its own side to meet the other. Driven by the animation API
+      // rather than a CSS transition: setting the two transforms in one go left the
+      // browser free to collapse them into a single style change, and no transition
+      // was ever created — the frame simply appeared in place.
       incoming.style.transform = roll.rest;
+      incoming.classList.add('showing');
+      incoming.animate(
+        [{ transform: roll.enter }, { transform: roll.rest }],
+        { duration: 420, easing: 'cubic-bezier(.2,.72,.24,1)' }
+      );
       outgoing.classList.remove('showing');
       say();
     };

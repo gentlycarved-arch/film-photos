@@ -98,7 +98,7 @@ body{
   height:100%;
   object-fit:cover;
   opacity:0;
-  transition:opacity .17s linear, transform .17s cubic-bezier(.3,.7,.3,1);
+  transition:opacity .3s linear, transform .42s cubic-bezier(.2,.72,.24,1);
 }
 .plate img.showing{ opacity:1; }
 
