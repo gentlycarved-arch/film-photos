@@ -1,8 +1,9 @@
 :root{
-  --bg:#0d0c0b;
-  --mark:#8a857b;
-  --text-dim:#6f6a61;
-  --nav-w:172px;
+  --bg:#0b0a09;
+  --film:#141210;
+  --film-edge:#1d1a17;
+  --edge-ink:#b8ad97;
+  --rolls-h:236px;
 }
 
 *{box-sizing:border-box}
@@ -11,190 +12,212 @@ body{
   background:var(--bg);
   font-family:ui-monospace,'SF Mono',Menlo,Consolas,monospace;
   height:100vh;
-  width:100vw;
   overflow:hidden;
   user-select:none;
 }
 
-/* the frame the exposures share */
-.stage{
+/* ---------- the exposure ---------- */
+.canvas{
   position:fixed;
-  top:0; left:0; bottom:0;
-  right:var(--nav-w);
+  top:0; left:0; right:0;
+  bottom:var(--rolls-h);
   overflow:hidden;
   background:var(--bg);
+  display:flex;
+  align-items:center;
+  justify-content:center;
 }
 
-/* isolate so the blending stays between the photographs and never touches the page */
-.exposures{
-  position:absolute;
-  inset:0;
+/* the two chosen frames come together inside one border, so the pair reads as a
+   single photographic object rather than two images that happen to overlap */
+.pairbox{
+  position:relative;
+  width:min(74vw, 1080px);
+  aspect-ratio:3 / 2;
+  max-height:calc(100vh - var(--rolls-h) - 76px);
+  overflow:hidden;
   isolation:isolate;
+  background:#000;
+  border:1px solid rgba(226,217,199,.55);
+  box-shadow:0 0 0 5px rgba(11,10,9,.9);
 }
 
-/* every photograph is full-bleed and occupies the same space as the others */
-.exposure{
+.plate{
   position:absolute;
   inset:0;
-  transition:opacity .13s linear;
-  will-change:opacity;
 }
-.exposure img{
-  display:block;
+.plate img{
+  position:absolute;
+  inset:0;
   width:100%;
   height:100%;
   object-fit:cover;
-  /* two additive passes would sum past white, so each is printed down first —
-     the darkroom equivalent of cutting exposure time per pass */
-  filter:brightness(.72) contrast(1.1) saturate(.94);
-  transition:filter .13s linear;
+  opacity:0;
+  transition:opacity .17s linear, transform .17s cubic-bezier(.3,.7,.3,1);
 }
-/* the exposure on top is held back less, so it stays the one you read */
-.exposure.dominant img{
-  filter:brightness(.9) contrast(1.05) saturate(1);
-}
+.plate img.showing{ opacity:1; }
 
-/* film grain and a faint tonal veil, held over the whole composition */
+/* row 1 arrives from the left, row 2 from the right; both come to rest overlapping.
+   The two positions are set inline by the script, so the entry always animates. */
+
+/* the first exposure is printed down; the second is additive over it, so the two
+   sum the way they would on one frame of film rather than sitting one atop the other */
+.plate-a img{ filter:brightness(1) contrast(1.04) saturate(.97); }
+.plate-b{ mix-blend-mode:screen; }
+.plate-b img{ filter:brightness(.8) contrast(1.06) saturate(.95); }
+
 .grain{
   position:absolute;
   inset:0;
-  z-index:50;
+  z-index:5;
   pointer-events:none;
-  opacity:.55;
-  mix-blend-mode:overlay;
+  /* plain grain at low opacity: any blend mode against this noise darkened the
+     whole exposure, because the tile itself averages well below mid-grey */
+  opacity:.09;
   background-image:
-    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='4' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='200' height='200' filter='url(%23n)' opacity='0.5'/></svg>");
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.84' numOctaves='4' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='200' height='200' filter='url(%23n)' opacity='0.5'/></svg>");
   background-size:200px 200px;
 }
 
-/* ---------- two photographic sequences, laid across one another ---------- */
-.strips, .rings{
-  position:fixed;
-  top:0; left:0; bottom:0;
-  right:var(--nav-w);
-  overflow:hidden;
-  display:none;
-  background:var(--bg);
-  isolation:isolate;
-  cursor:ew-resize;
-}
-.strips.on, .rings.on{ display:block; }
-
-/* each sequence is one continuous run of frames, taller than it needs to be so the
-   two bands cross in the middle of the screen */
-.strip{
+.readout{
   position:absolute;
-  left:0;
+  left:0; right:0; bottom:16px;
+  text-align:center;
+  z-index:6;
+  font-size:9px;
+  letter-spacing:.16em;
+  color:rgba(214,205,188,.5);
+  pointer-events:none;
+}
+
+/* ---------- the two scanned rolls ---------- */
+.rolls{
+  position:fixed;
+  left:0; right:0; bottom:0;
+  height:var(--rolls-h);
+  background:var(--bg);
+  border-top:1px solid #221f1b;
   display:flex;
-  align-items:stretch;
-  will-change:transform;
+  flex-direction:column;
+  gap:6px;
+  padding:8px 0 10px;
 }
-.strip-a{ top:4%;  height:58%; }
-.strip-b{ top:33%; height:58%; mix-blend-mode:screen; }
 
-.strip .frame{ flex:0 0 auto; height:100%; position:relative; }
-.strip img{ display:block; height:100%; width:auto; }
-.strip-a img{ filter:brightness(.78) contrast(1.06) saturate(.95); }
-.strip-b img{ filter:brightness(.66) contrast(1.08) saturate(.93); }
-
-/* ---------- the same two sequences, bent into rings ---------- */
-.ring{
-  position:absolute;
-  left:50%; top:50%;
-  width:0; height:0;
-  will-change:transform;
+.roll{ position:relative; }
+.roll-edge{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:0 14px 4px;
 }
-.ring-b{ mix-blend-mode:screen; }
-.ring .frame{
-  position:absolute;
-  transform-origin:50% 100%;   /* the inner edge, so the frames fan from the centre */
-}
-.ring img{ display:block; width:100%; height:100%; object-fit:cover; }
-.ring-a img{ filter:brightness(.74) contrast(1.06) saturate(.95); }
-.ring-b img{ filter:brightness(.6) contrast(1.08) saturate(.92); }
-
-/* the frame number, only close up */
-.seq-label{
-  position:absolute;
-  left:6px; top:5px;
+.roll-name{
   font-size:8px;
-  letter-spacing:.12em;
-  color:rgba(236,230,218,.85);
-  text-shadow:0 1px 3px rgba(0,0,0,.85);
-  opacity:0;
-  transition:opacity .12s linear;
-  pointer-events:none;
+  letter-spacing:.28em;
+  color:#5c554b;
 }
-.frame:hover .seq-label{ opacity:1; }
-
-/* ---------- two contact sheets printed on transparent material ---------- */
-.pair{
-  position:fixed;
-  top:0; left:0; bottom:0;
-  right:var(--nav-w);
-  overflow:hidden;
-  display:none;
-  background:var(--bg);
-  isolation:isolate;
-  cursor:grab;
-}
-.pair.on{ display:block; }
-.pair.shifting{ cursor:grabbing; }
-
-/* both sheets run past the edges, so sliding one never exposes bare ground */
-.pgrid{
-  position:absolute;
-  top:-12%; left:-12%; right:-12%; bottom:-12%;
-  display:grid;
-  grid-template-columns:repeat(4, 1fr);
-  grid-template-rows:repeat(3, 1fr);
-}
-/* the second sheet is additive over the first: where they cross, the exposures sum */
-.pgrid-b{ mix-blend-mode:screen; }
-
-.pcell{
-  position:relative;
-  overflow:hidden;
+.shuffle{
+  font:inherit;
+  font-size:8px;
+  letter-spacing:.2em;
+  text-transform:uppercase;
+  color:#8d8474;
+  background:rgba(255,250,240,.05);
+  border:none;
+  border-radius:999px;
+  padding:4px 11px;
   cursor:pointer;
+  transition:background .15s ease, color .15s ease;
 }
-.pcell img{
+.shuffle:hover{ background:rgba(255,250,240,.12); color:#e4dccc; }
+
+/* the strip itself: film base, sprockets punched along both edges */
+.strip{
+  display:flex;
+  gap:5px;
+  align-items:stretch;
+  overflow-x:auto;
+  overflow-y:hidden;
+  padding:9px 12px;
+  background:
+    /* sprocket holes, top and bottom */
+    repeating-linear-gradient(90deg,
+      transparent 0 7px, rgba(11,10,9,.92) 7px 17px, transparent 17px 24px) top/100% 7px no-repeat,
+    repeating-linear-gradient(90deg,
+      transparent 0 7px, rgba(11,10,9,.92) 7px 17px, transparent 17px 24px) bottom/100% 7px no-repeat,
+    linear-gradient(var(--film), var(--film));
+  scrollbar-width:none;
+}
+.strip::-webkit-scrollbar{ display:none; }
+
+.fframe{
+  position:relative;
+  flex:0 0 auto;
+  height:78px;
+  cursor:pointer;
+  background:var(--film-edge);
+  padding:2px;
+  opacity:.72;
+  transition:opacity .12s linear, box-shadow .12s linear;
+}
+.fframe img{
   display:block;
-  width:100%;
   height:100%;
-  object-fit:cover;
-  transition:filter .12s linear, opacity .12s linear;
+  width:auto;
+  filter:brightness(.92) saturate(.9) contrast(1.02);
 }
-.pgrid-a .pcell img{ filter:brightness(.74) contrast(1.08) saturate(.94); }
-.pgrid-b .pcell img{ filter:brightness(.62) contrast(1.1) saturate(.92); }
-/* the photograph under the cursor comes up, so it reads as a single frame */
-.pgrid-a .pcell:hover img{ filter:brightness(1) contrast(1.02) saturate(1); }
-.pgrid-b .pcell:hover img{ filter:brightness(.92) contrast(1.04) saturate(1); }
-/* a chosen photograph stays forward */
-.pcell.lifted{ z-index:5; }
-.pgrid-a .pcell.lifted img,
-.pgrid-b .pcell.lifted img{ filter:brightness(1.02) contrast(1) saturate(1.02); }
+.fframe:hover{ opacity:1; }
 
-/* the sheet holding the chosen frame carries the composition */
-.pgrid.recessed{ opacity:.62; }
-
-.pcell-label{
+/* the frame number, printed on the film edge as the lab would */
+.fnum{
   position:absolute;
-  left:7px; top:6px;
-  font-size:8px;
-  letter-spacing:.12em;
-  color:rgba(236,230,218,.9);
-  text-shadow:0 1px 3px rgba(0,0,0,.85);
-  opacity:0;
-  transition:opacity .12s linear;
+  left:3px;
+  bottom:-11px;
+  font-size:7px;
+  letter-spacing:.1em;
+  color:var(--edge-ink);
+  opacity:.62;
   pointer-events:none;
 }
-.pcell:hover .pcell-label{ opacity:1; }
 
-/* ---------- the grid: five across, straightforward ---------- */
+/* whichever frame is currently exposed */
+.fframe.chosen{
+  opacity:1;
+  box-shadow:0 0 0 1px rgba(240,233,219,.9);
+}
+.fframe.chosen .fnum{ opacity:1; color:#f0e9db; }
+
+@media(max-width:760px){
+  :root{--rolls-h:206px}
+  .fframe{ height:64px; }
+}
+
+/* ---------- the only two ways in ---------- */
+.views{
+  position:fixed;
+  top:14px; right:16px;
+  z-index:40;
+  display:flex;
+  gap:6px;
+}
+.vbtn{
+  font:inherit;
+  font-size:9px;
+  letter-spacing:.06em;
+  color:#8d8474;
+  background:rgba(255,250,240,.06);
+  border:none;
+  border-radius:999px;
+  padding:6px 13px;
+  cursor:pointer;
+  transition:background .15s ease, color .15s ease;
+}
+.vbtn:hover{ background:rgba(255,250,240,.12); color:#cfc6b4; }
+.vbtn.active{ background:rgba(255,250,240,.17); color:#f2ecdf; }
+
+/* ---------- the grid ---------- */
 .sheet{
   position:fixed;
-  top:0; left:0; bottom:0;
-  right:var(--nav-w);
+  inset:0;
   overflow-y:auto;
   display:none;
   grid-template-columns:repeat(5, 1fr);
@@ -202,7 +225,7 @@ body{
   align-content:start;
   gap:1px;
   background:#000;
-  padding:1px;
+  padding:1px 1px 1px;
 }
 .sheet.on{ display:grid; }
 .cell{
@@ -210,12 +233,10 @@ body{
   aspect-ratio:3 / 2;
   overflow:hidden;
   cursor:pointer;
-  background:#0d0c0b;
+  background:#0b0a09;
 }
 .cell img{
-  display:block;
-  width:100%;
-  height:100%;
+  display:block; width:100%; height:100%;
   object-fit:cover;
   opacity:.86;
   transition:opacity .12s linear;
@@ -226,30 +247,15 @@ body{
   left:6px; bottom:5px;
   font-size:8px;
   letter-spacing:.12em;
-  color:rgba(232,226,213,.9);
+  color:rgba(236,230,218,.92);
+  text-shadow:0 1px 3px rgba(0,0,0,.85);
   opacity:0;
   transition:opacity .12s linear;
   pointer-events:none;
-  text-shadow:0 1px 3px rgba(0,0,0,.8);
 }
 .cell:hover .cell-label{ opacity:1; }
 
-/* a frame chosen for the pairing */
-.cell.picked{ outline:1px solid rgba(238,232,220,.95); outline-offset:-1px; }
-.cell.picked img{ opacity:1; }
-.cell.picked .cell-label{ opacity:1; }
-.pick-mark{
-  position:absolute;
-  top:5px; right:6px;
-  font-size:8px;
-  letter-spacing:.1em;
-  color:rgba(232,226,213,.95);
-  text-shadow:0 1px 3px rgba(0,0,0,.85);
-  display:none;
-}
-.cell.picked .pick-mark{ display:block; }
-
-/* ---------- one photograph, filling the viewport ---------- */
+/* one photograph, filling the viewport */
 .viewer{
   position:fixed;
   inset:0;
@@ -258,128 +264,14 @@ body{
   align-items:center;
   justify-content:center;
   flex-direction:column;
-  background:#080807;
+  background:#070706;
   cursor:zoom-out;
 }
 .viewer.on{ display:flex; }
-.viewer-frame{
-  position:relative;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  isolation:isolate;
-}
-.viewer-frame img{
-  max-width:94vw;
-  max-height:88vh;
-  object-fit:contain;
-}
-/* the second frame lies exactly over the first, additive, as in the main view */
-.viewer-frame img + img{
-  position:absolute;
-  inset:0;
-  margin:auto;
-  display:none;
-  mix-blend-mode:screen;
-}
-.viewer.paired .viewer-frame img{ filter:brightness(.72) contrast(1.1) saturate(.95); }
-.viewer.paired .viewer-frame img + img{ display:block; opacity:.92; }
+.viewer img{ max-width:94vw; max-height:88vh; object-fit:contain; }
 .viewer-label{
   margin-top:14px;
   font-size:9px;
   letter-spacing:.16em;
   color:#6f6a61;
-  text-transform:uppercase;
-}
-
-/* ---------- side navigation ---------- */
-.nav{
-  position:fixed;
-  top:0; right:0; bottom:0;
-  width:var(--nav-w);
-  border-left:1px solid #24211d;
-  background:#131211;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  gap:6px;
-  padding:22px 16px;
-  z-index:200;
-}
-/* pill buttons, each carrying its own radio */
-.nav-btn{
-  font:inherit;
-  font-size:10px;
-  letter-spacing:.02em;
-  text-align:left;
-  padding:7px 12px;
-  border:none;
-  border-radius:999px;
-  background:rgba(255,253,247,.045);
-  color:#7d776d;
-  cursor:pointer;
-  display:flex;
-  align-items:center;
-  gap:8px;
-  width:100%;
-  transition:background .15s ease, color .15s ease;
-}
-.nav-btn::before{
-  content:"";
-  width:9px; height:9px;
-  border-radius:50%;
-  border:1px solid #57514a;
-  background:transparent;
-  flex:0 0 auto;
-  box-shadow:inset 0 0 0 2px transparent;
-  transition:box-shadow .15s ease, border-color .15s ease;
-}
-.nav-group{ display:flex; flex-direction:column; gap:6px; }
-.nav-rule{ height:1px; background:#24211d; margin:14px 0; }
-
-.nav-desc{
-  margin:18px 0 0 0;
-  font-size:9.5px;
-  line-height:1.65;
-  letter-spacing:.02em;
-  color:#5e584f;
-}
-
-.counter{
-  margin-top:18px;
-  font-size:9px;
-  letter-spacing:.16em;
-  color:#453f38;
-}
-.hint{
-  margin-top:8px;
-  font-size:8.5px;
-  line-height:1.6;
-  letter-spacing:.1em;
-  color:#453f38;
-  text-transform:uppercase;
-}
-
-.nav-btn:hover{ background:rgba(255,253,247,.08); color:#a9a297; }
-.nav-btn.active{ background:rgba(255,253,247,.14); color:#efe9dd; }
-.nav-btn.active::before{
-  border-color:#efe9dd;
-  box-shadow:inset 0 0 0 2px #efe9dd;
-}
-
-@media(max-width:760px){
-  :root{--nav-w:0px}
-  .stage{right:0;bottom:44px}
-  .nav{
-    top:auto; bottom:0; left:0; right:0;
-    width:100%; height:auto;
-    flex-direction:row;
-    justify-content:flex-start;
-    gap:14px;
-    padding:12px 14px;
-    border-left:none;
-    border-top:1px solid #24211d;
-    overflow-x:auto;
-  }
-  .nav-btn{white-space:nowrap}
 }

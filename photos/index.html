@@ -8,58 +8,40 @@
 </head>
 <body>
 
-<div class="stage" id="stage">
-  <div class="exposures" id="exposures"></div>
-  <div class="grain"></div>
-</div>
+<nav class="views" id="views">
+  <button class="vbtn active" data-view="expose">double exposure</button>
+  <button class="vbtn" data-view="grid">grid</button>
+</nav>
 
-<div class="strips" id="strips">
-  <div class="strip strip-a" id="stripA"></div>
-  <div class="strip strip-b" id="stripB"></div>
-  <div class="grain"></div>
-</div>
-
-<div class="rings" id="rings">
-  <div class="ring ring-a" id="ringA"></div>
-  <div class="ring ring-b" id="ringB"></div>
-  <div class="grain"></div>
-</div>
-
-<div class="pair" id="pair">
-  <div class="pgrid pgrid-a" id="pgridA"></div>
-  <div class="pgrid pgrid-b" id="pgridB"></div>
-  <div class="grain"></div>
-</div>
-
-<div class="sheet" id="sheet"></div>
+<section class="sheet" id="sheet"></section>
 
 <div class="viewer" id="viewer">
-  <div class="viewer-frame" id="viewerFrame">
-    <img id="viewerImg" src="" alt="">
-    <img id="viewerImgB" src="" alt="">
-  </div>
+  <img id="viewerImg" src="" alt="">
   <div class="viewer-label" id="viewerLabel"></div>
 </div>
 
-<nav class="nav" id="nav">
-  <div class="nav-group" id="views">
-    <button class="nav-btn active" data-view="exposure">double exposure</button>
-    <button class="nav-btn" data-view="strips">two strips</button>
-    <button class="nav-btn" data-view="rings">two rings</button>
-    <button class="nav-btn" data-view="pair">two sheets</button>
-    <button class="nav-btn" data-view="sheet">grid</button>
+<main class="canvas" id="canvas">
+  <div class="pairbox">
+    <div class="plate plate-a" id="plateA"></div>
+    <div class="plate plate-b" id="plateB"></div>
+    <div class="grain"></div>
   </div>
-  <div class="nav-rule"></div>
-  <button class="nav-btn active" data-cat="all">all</button>
-  <button class="nav-btn" data-cat="landscape">landscape</button>
-  <button class="nav-btn" data-cat="portrait">portrait</button>
-  <button class="nav-btn" data-cat="italy">italy</button>
-  <button class="nav-btn" data-cat="saudi">saudi</button>
-  <button class="nav-btn" data-cat="underexposed">underexposed</button>
-  <p class="nav-desc">Every photograph, seen two at a time as a double exposure. Click to move through them.</p>
-  <div class="counter" id="counter"></div>
-  <div class="hint" id="hint"></div>
-</nav>
+  <div class="readout" id="readout"></div>
+</main>
+
+<footer class="rolls">
+  <div class="roll" data-slot="a">
+    <div class="roll-edge">
+      <span class="roll-name">SCAN A</span>
+      <button class="shuffle" id="shuffle">randomize</button>
+    </div>
+    <div class="strip" id="stripA"></div>
+  </div>
+  <div class="roll" data-slot="b">
+    <div class="roll-edge"><span class="roll-name">SCAN B</span></div>
+    <div class="strip" id="stripB"></div>
+  </div>
+</footer>
 
 <script src="app.js"></script>
 </body>

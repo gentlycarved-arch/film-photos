@@ -1,355 +1,114 @@
 (function () {
-  const stage = document.getElementById('stage');
-  const exposuresEl = document.getElementById('exposures');
-  const nav = document.getElementById('nav');
-  const views = document.getElementById('views');
-  const counter = document.getElementById('counter');
-  const sheet = document.getElementById('sheet');
-  const pair = document.getElementById('pair');
-  const strips = document.getElementById('strips');
+  const plateA = document.getElementById('plateA');
+  const plateB = document.getElementById('plateB');
   const stripA = document.getElementById('stripA');
   const stripB = document.getElementById('stripB');
-  const rings = document.getElementById('rings');
-  const ringA = document.getElementById('ringA');
-  const ringB = document.getElementById('ringB');
-  const pairA = document.getElementById('pgridA');
-  const pairB = document.getElementById('pgridB');
+  const shuffle = document.getElementById('shuffle');
+  const readout = document.getElementById('readout');
+  const views = document.getElementById('views');
+  const sheet = document.getElementById('sheet');
   const viewer = document.getElementById('viewer');
   const viewerImg = document.getElementById('viewerImg');
-  const viewerImgB = document.getElementById('viewerImgB');
   const viewerLabel = document.getElementById('viewerLabel');
-  const hint = document.getElementById('hint');
 
-  const LAYERS = 2;          // two photographs share the frame at a time
+  let everything = [];
+  let openAt = -1;
 
-  // Every layer is additive over black, the way stacked exposures build up on one
-  // frame of film: highlights accumulate, shadows let whatever is beneath show through.
-  const ROLES = [
-    { opacity: 0.90, blend: 'screen' },
-    { opacity: 0.66, blend: 'screen' },
-  ];
-  const HOVER_LIFT = 0.16;   // how much pointing at a layer brings it up
-
-  let all = [];
-  let pool = [];
-  let layers = [];           // in stacking order, 0 = dominant
-  let hovered = -1;
-  let idx = 0;               // index in the pool of the dominant exposure
-  let view = 'exposure';     // 'exposure' or 'sheet'
-  let openAt = -1;           // index open in the full-viewport viewer, -1 if closed
-  let picked = [];           // frames chosen in the grid to expose over one another
+  const rolls = {
+    a: { strip: stripA, plate: plateA, items: [], chosen: null, imgs: [], slot: 0, gen: 0,
+         enter: 'translateX(-4%)', rest: 'translateX(0)' },
+    b: { strip: stripB, plate: plateB, items: [], chosen: null, imgs: [], slot: 0, gen: 0,
+         // the second never lands quite square on the first
+         enter: 'translateX(4%) scale(1.05)', rest: 'translateX(0.9%) translateY(-0.7%) scale(1.05)' },
+  };
 
   fetch('manifest.json')
     .then((r) => r.json())
-    .then((manifest) => {
-      all = manifest;
-      pool = manifest.slice();
-      for (let i = 0; i < LAYERS; i++) layers.push(makeLayer());
-      idx = LAYERS - 1;
-      render();
-    })
+    .then(build)
     .catch((err) => {
-      exposuresEl.insertAdjacentHTML(
+      document.body.insertAdjacentHTML(
         'beforeend',
-        '<p style="padding:40px;color:#aaa;font-family:monospace">Could not load manifest.json — ' + err + '</p>'
+        '<p style="position:fixed;top:30px;left:30px;color:#aaa;font-family:monospace">Could not load manifest.json — ' + err + '</p>'
       );
     });
 
-  function makeLayer() {
-    const el = document.createElement('div');
-    el.className = 'exposure';
-    const img = document.createElement('img');
-    img.alt = '';
-    el.appendChild(img);
-    exposuresEl.appendChild(el);
-    return { el, img, file: null };
-  }
+  function build(manifest) {
+    // the two rolls hold different halves of the collection, so a pairing is always
+    // two different photographs
+    everything = manifest;
+    const half = Math.ceil(manifest.length / 2);
+    rolls.a.items = manifest.slice(0, half);
+    rolls.b.items = manifest.slice(half);
 
-  // deterministic stream of numbers from any string
-  function seeded(key) {
-    let h = 2166136261;
-    for (let i = 0; i < key.length; i++) { h ^= key.charCodeAt(i); h = Math.imul(h, 16777619); }
-    return () => { h ^= h << 13; h |= 0; h ^= h >>> 17; h ^= h << 5; h |= 0; return ((h >>> 0) % 10000) / 10000; };
-  }
-
-  // Framing is derived from the file name, so a photograph is always cropped and
-  // placed the same way. Without this, stepping back would re-frame what you just saw.
-  function framing(file) {
-    const r = seeded(file);
-    return {
-      ox: 30 + r() * 40,
-      oy: 30 + r() * 40,
-      scale: 1.04 + r() * 0.14,
-      dx: (r() - 0.5) * 5,
-      dy: (r() - 0.5) * 5,
-    };
-  }
-
-  // Draw the pair from the current position. Everything is addressed by index, so
-  // the sequence reads in both directions.
-  function render() {
-    const n = pool.length;
-    layers.forEach((layer, i) => {
-      const item = pool[((idx - i) % n + n) % n];
-      if (layer.file !== item.file) {
-        layer.file = item.file;
-        layer.img.src = 'img/' + item.file;
-        const f = framing(item.file);
-        layer.img.style.objectPosition = f.ox.toFixed(0) + '% ' + f.oy.toFixed(0) + '%';
-        layer.el.style.transform =
-          'translate(' + f.dx.toFixed(1) + '%, ' + f.dy.toFixed(1) + '%) scale(' + f.scale.toFixed(3) + ')';
-      }
-      const role = ROLES[Math.min(i, ROLES.length - 1)];
-      const lift = i === hovered ? HOVER_LIFT : 0;
-      layer.el.style.zIndex = String(LAYERS - i);
-      layer.el.style.mixBlendMode = role.blend;
-      layer.el.style.opacity = Math.min(1, role.opacity + lift).toFixed(3);
-      layer.el.classList.toggle('dominant', i === 0);
-    });
-    const back = ((idx - LAYERS + 1) % n + n) % n;
-    counter.textContent =
-      String(back + 1).padStart(3, '0') + '\u2013' + String(idx + 1).padStart(3, '0') +
-      ' / ' + String(pool.length).padStart(3, '0');
-  }
-
-  function step(d) {
-    const n = pool.length;
-    idx = ((idx + d) % n + n) % n;
-    render();
-  }
-
-  // ---------- getting through the collection ----------
-  // A click moves the whole pair on, so both photographs change together and the
-  // next click brings an entirely new exposure rather than half of the last one.
-  stage.addEventListener('click', () => step(LAYERS));
-
-  window.addEventListener('keydown', (e) => {
-    // with a photograph open, the arrows walk the collection inside the viewer
-    if (openAt >= 0) {
-      if (e.key === 'Escape') { e.preventDefault(); closeViewer(true); return; }
-      // a pair is a composition, not a position in the sequence: leave it be
-      if (viewer.classList.contains('paired')) return;
-      if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') { e.preventDefault(); picked = []; openViewer(openAt + 1); }
-      else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); picked = []; openViewer(openAt - 1); }
-      return;
-    }
-    if (view !== 'exposure') return;
-    if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ' || e.key === 'Enter') {
-      e.preventDefault(); step(LAYERS);
-    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
-      e.preventDefault(); step(-LAYERS);
-    } else if (e.key === 'Home') {
-      e.preventDefault(); idx = LAYERS - 1; render();
-    }
-  });
-
-  let wheelAcc = 0, wheelLock = false;
-  window.addEventListener('wheel', (e) => {
-    if (view !== 'exposure' || openAt >= 0) return;   // the grid scrolls normally
-    wheelAcc += e.deltaY || e.deltaX;
-    if (wheelLock || Math.abs(wheelAcc) < 40) return;
-    step(wheelAcc > 0 ? LAYERS : -LAYERS);
-    wheelAcc = 0;
-    wheelLock = true;
-    setTimeout(() => { wheelLock = false; }, 90);
-  }, { passive: true });
-
-  // dragging across the frame scrubs through, for covering ground quickly
-  let scrub = null;
-  stage.addEventListener('mousedown', (e) => { scrub = { x: e.clientX, moved: false }; });
-  window.addEventListener('mousemove', (e) => {
-    if (!scrub) return;
-    const dx = e.clientX - scrub.x;
-    if (Math.abs(dx) >= 46) {
-      step(dx > 0 ? LAYERS : -LAYERS);
-      scrub.x = e.clientX;
-      scrub.moved = true;
-    }
-  });
-  window.addEventListener('mouseup', () => { scrub = null; });
-
-  // ---------- two photographic sequences ----------
-  // Each line runs its own way through the collection, so the two are never showing
-  // the same frames. Advancing them by different amounts keeps bringing new pairs
-  // of photographs into the same piece of screen.
-  const SEQ_COUNT = 9;
-  let seqA = 0, seqB = 5;
-  let seqShift = 0;             // how far the second sequence is pushed along by hand
-
-  function seqFrame(item) {
-    const frame = document.createElement('div');
-    frame.className = 'frame';
-    const img = document.createElement('img');
-    img.src = 'img-grid/' + item.file;
-    img.alt = '';
-    frame.appendChild(img);
-    const label = document.createElement('div');
-    label.className = 'seq-label';
-    label.textContent = 'fig.' + item.id;
-    frame.appendChild(label);
-    return frame;
-  }
-
-  function buildStrips() {
-    const n = pool.length;
-    [[stripA, seqA, 1], [stripB, seqB, -1]].forEach(([el, start]) => {
-      el.innerHTML = '';
-      for (let i = 0; i < SEQ_COUNT; i++) {
-        el.appendChild(seqFrame(pool[(start + i) % n]));
-      }
-    });
-    applyStripShift();
-  }
-
-  function applyStripShift() {
-    const w = strips.getBoundingClientRect().width;
-    // the second line starts part of a frame along, so nothing lines up squarely
-    stripA.style.transform = 'translateX(' + (-w * 0.12) + 'px)';
-    stripB.style.transform = 'translateX(' + (-w * 0.38 + seqShift) + 'px)';
-  }
-
-  function buildRings() {
-    const n = pool.length;
-    const r = rings.getBoundingClientRect();
-    const unit = Math.min(r.width, r.height);
-
-    [[ringA, seqA, unit * 0.30, 0], [ringB, seqB, unit * 0.40, 180 / SEQ_COUNT]]
-      .forEach(([el, start, radius, twist]) => {
-        el.innerHTML = '';
-        const w = unit * 0.30;
-        const h = radius * 1.55;         // long enough that the inner ends pile up in the middle
-        for (let i = 0; i < SEQ_COUNT; i++) {
-          const f = seqFrame(pool[(start + i) % n]);
-          f.style.width = w + 'px';
-          f.style.height = h + 'px';
-          f.style.left = (-w / 2) + 'px';
-          f.style.top = (-h) + 'px';
-          f.style.transform = 'rotate(' + (i * (360 / SEQ_COUNT) + twist) + 'deg)';
-          el.appendChild(f);
-        }
-      });
-    applyRingShift();
-  }
-
-  function applyRingShift() {
-    ringB.style.transform = 'rotate(' + (seqShift * 0.12) + 'deg)';
-  }
-
-  function advanceSeq() {
-    const n = pool.length;
-    // different strides, so the pairing changes rather than the whole thing sliding
-    seqA = (seqA + 1) % n;
-    seqB = (seqB + 2) % n;
-    if (view === 'strips') buildStrips(); else buildRings();
-  }
-
-  // a click changes the pairing; dragging nudges one sequence against the other
-  let seqDrag = null;
-  [strips, rings].forEach((host) => {
-    host.addEventListener('mousedown', (e) => {
-      seqDrag = { x: e.clientX, from: seqShift, moved: false };
-    });
-    host.addEventListener('click', () => {
-      if (seqDrag && seqDrag.moved) return;
-      advanceSeq();
-    });
-  });
-  window.addEventListener('mousemove', (e) => {
-    if (!seqDrag) return;
-    const dx = e.clientX - seqDrag.x;
-    if (!seqDrag.moved && Math.abs(dx) > 3) seqDrag.moved = true;
-    if (!seqDrag.moved) return;
-    seqShift = seqDrag.from + dx;
-    if (view === 'strips') applyStripShift(); else applyRingShift();
-  });
-  window.addEventListener('mouseup', () => {
-    if (!seqDrag) return;
-    setTimeout(() => { seqDrag = null; }, 0);
-  });
-
-  // ---------- two contact sheets, one over the other ----------
-  const PAIR_COLS = 4, PAIR_ROWS = 3;
-  const PAIR_CELLS = PAIR_COLS * PAIR_ROWS;
-  let shift = { x: 0, y: 0 };     // how far sheet B sits off sheet A
-  let liftedCell = null;
-
-  function buildPair() {
-    const n = pool.length;
-    [pairA, pairB].forEach((grid, g) => {
-      grid.innerHTML = '';
-      for (let i = 0; i < PAIR_CELLS; i++) {
-        // the two sheets draw from opposite halves, so they are different collections
-        const at = (g === 0 ? i : i + Math.floor(n / 2)) % n;
-        const item = pool[at];
-        const cell = document.createElement('div');
-        cell.className = 'pcell';
+    Object.keys(rolls).forEach((key) => {
+      const roll = rolls[key];
+      roll.imgs = [document.createElement('img'), document.createElement('img')];
+      roll.imgs.forEach((im) => { im.alt = ''; roll.plate.appendChild(im); });
+      roll.items.forEach((item, i) => {
+        const frame = document.createElement('div');
+        frame.className = 'fframe';
         const img = document.createElement('img');
-        // a cell is a quarter of the viewport wide; the full scans would put a
-        // quarter-gigabyte of decoded bitmap under a full-screen blend
         img.src = 'img-grid/' + item.file;
+        img.loading = 'lazy';
         img.alt = '';
-        cell.appendChild(img);
-        const label = document.createElement('div');
-        label.className = 'pcell-label';
-        label.textContent = 'fig.' + item.id;
-        cell.appendChild(label);
-        cell.addEventListener('click', (e) => {
-          e.stopPropagation();
-          if (pairDrag && pairDrag.moved) return;
-          liftCell(cell, grid);
-        });
-        grid.appendChild(cell);
-      }
+        frame.appendChild(img);
+        const num = document.createElement('div');
+        num.className = 'fnum';
+        num.textContent = item.id;
+        frame.appendChild(num);
+        frame.addEventListener('click', () => expose(key, i));
+        roll.strip.appendChild(frame);
+      });
     });
-    // start half a cell out of true, so the overlap is legible from the first moment
-    const r = pair.getBoundingClientRect();
-    shift = { x: (r.width / PAIR_COLS) * 0.5, y: (r.height / PAIR_ROWS) * 0.32 };
-    applyShift();
+
+    expose('a', 0);
+    expose('b', 0);
   }
 
-  function applyShift() {
-    pairB.style.transform = 'translate(' + shift.x.toFixed(1) + 'px, ' + shift.y.toFixed(1) + 'px)';
+  // Put a frame from one roll into its half of the exposure. Each plate owns exactly
+  // two image elements and alternates between them, so the crossfade never leaves a
+  // stray behind however fast the selection changes. A generation token means a slow
+  // load that has already been superseded is simply dropped.
+  function expose(key, i) {
+    const roll = rolls[key];
+    const item = roll.items[i];
+    if (!item) return;
+
+    roll.chosen = i;
+    [...roll.strip.children].forEach((f, n) => f.classList.toggle('chosen', n === i));
+
+    const gen = ++roll.gen;
+    const incoming = roll.imgs[roll.slot ^ 1];
+    const outgoing = roll.imgs[roll.slot];
+
+    const done = () => {
+      if (gen !== roll.gen) return;        // a later choice already won
+      roll.slot ^= 1;
+      // start it off to its own side, then let it travel in to meet the other
+      incoming.style.transform = roll.enter;
+      void incoming.offsetWidth;           // commit that position before animating
+      incoming.classList.add('showing');
+      incoming.style.transform = roll.rest;
+      outgoing.classList.remove('showing');
+      say();
+    };
+
+    incoming.onload = done;
+    incoming.src = 'img/' + item.file;
+    if (incoming.complete) done();          // already cached
   }
 
-  function liftCell(cell, grid) {
-    if (liftedCell) liftedCell.classList.remove('lifted');
-    liftedCell = cell === liftedCell ? null : cell;
-    if (liftedCell) liftedCell.classList.add('lifted');
-    // the other sheet steps back so the chosen frame carries
-    pairA.classList.toggle('recessed', !!liftedCell && grid !== pairA);
-    pairB.classList.toggle('recessed', !!liftedCell && grid !== pairB);
+  function say() {
+    const a = rolls.a.items[rolls.a.chosen];
+    const b = rolls.b.items[rolls.b.chosen];
+    if (!a || !b) return;
+    readout.textContent = 'fig.' + a.id + '  +  fig.' + b.id;
   }
-
-  // Sheet B can be slid over sheet A, but only within a cell either way: the point is
-  // to see new pairings line up, not to scatter the photographs.
-  let pairDrag = null;
-  pair.addEventListener('mousedown', (e) => {
-    pairDrag = { x: e.clientX, y: e.clientY, from: { ...shift }, moved: false };
-    pair.classList.add('shifting');
-  });
-  window.addEventListener('mousemove', (e) => {
-    if (!pairDrag) return;
-    const dx = e.clientX - pairDrag.x;
-    const dy = e.clientY - pairDrag.y;
-    if (!pairDrag.moved && Math.hypot(dx, dy) > 3) pairDrag.moved = true;
-    if (!pairDrag.moved) return;
-    const r = pair.getBoundingClientRect();
-    const capX = r.width / PAIR_COLS;
-    const capY = r.height / PAIR_ROWS;
-    shift.x = Math.max(-capX, Math.min(pairDrag.from.x + dx, capX));
-    shift.y = Math.max(-capY, Math.min(pairDrag.from.y + dy, capY));
-    applyShift();
-  });
-  window.addEventListener('mouseup', () => {
-    if (!pairDrag) return;
-    pair.classList.remove('shifting');
-    setTimeout(() => { pairDrag = null; }, 0);
-  });
 
   // ---------- the grid, and one photograph filling the viewport ----------
   function buildSheet() {
-    sheet.innerHTML = '';
-    pool.forEach((item, i) => {
+    if (sheet.children.length) return;          // built once
+    everything.forEach((item, i) => {
       const cell = document.createElement('div');
       cell.className = 'cell';
       const img = document.createElement('img');
@@ -361,128 +120,44 @@
       label.className = 'cell-label';
       label.textContent = 'fig.' + item.id;
       cell.appendChild(label);
-      const mark = document.createElement('div');
-      mark.className = 'pick-mark';
-      cell.appendChild(mark);
-      cell.addEventListener('click', () => choose(i));
+      cell.addEventListener('click', () => openViewer(i));
       sheet.appendChild(cell);
     });
-    picked = [];
-    paintPicks();
   }
 
-  // Two frames chosen in the grid are exposed over one another, the same way the
-  // layers combine in the other view. Choosing one on its own just shows it.
-  function choose(i) {
-    const at = picked.indexOf(i);
-    if (at >= 0) {                      // clicking a chosen frame lets it go
-      picked.splice(at, 1);
-      paintPicks();
-      return;
-    }
-    picked.push(i);
-    if (picked.length === 1) {
-      paintPicks();
-      openViewer(picked[0]);            // seen on its own until a second is chosen
-      return;
-    }
-    picked = picked.slice(-2);
-    paintPicks();
-    openViewer(picked[0], picked[1]);
-  }
-
-  function paintPicks() {
-    [...sheet.children].forEach((cell, i) => {
-      const at = picked.indexOf(i);
-      cell.classList.toggle('picked', at >= 0);
-      const mark = cell.querySelector('.pick-mark');
-      if (mark) mark.textContent = at >= 0 ? String(at + 1) : '';
-    });
-    updateHint();
-  }
-
-  function updateHint() {
-    if (view === 'strips' || view === 'rings') {
-      hint.textContent = 'click for a new pairing \u00b7 drag to offset one sequence';
-      return;
-    }
-    if (view === 'pair') { hint.textContent = 'drag to slide one sheet over the other'; return; }
-    if (view !== 'sheet') { hint.textContent = ''; return; }
-    hint.textContent = picked.length === 1
-      ? 'pick a second to expose over it'
-      : 'pick two to combine';
-  }
-
-  function openViewer(i, j) {
-    const n = pool.length;
+  function openViewer(i) {
+    const n = everything.length;
     openAt = ((i % n) + n) % n;
-    const item = pool[openAt];
+    const item = everything[openAt];
     viewerImg.src = 'img/' + item.file;
-
-    const paired = j != null;
-    viewer.classList.toggle('paired', paired);
-    if (paired) {
-      const other = pool[((j % n) + n) % n];
-      viewerImgB.src = 'img/' + other.file;
-      viewerLabel.textContent = 'fig.' + item.id + '  ×  fig.' + other.id;
-    } else {
-      viewerImgB.removeAttribute('src');
-      viewerLabel.textContent =
-        'fig.' + item.id + '  ·  ' + String(openAt + 1).padStart(3, '0') + ' / ' + String(n).padStart(3, '0');
-    }
+    viewerLabel.textContent =
+      'fig.' + item.id + '  ·  ' + String(openAt + 1).padStart(3, '0') + ' / ' + String(n).padStart(3, '0');
     viewer.classList.add('on');
   }
+  function closeViewer() { openAt = -1; viewer.classList.remove('on'); }
+  viewer.addEventListener('click', closeViewer);
 
-  function closeViewer(clearPicks) {
-    openAt = -1;
-    viewer.classList.remove('on', 'paired');
-    if (clearPicks !== false) { picked = []; if (view === 'sheet') paintPicks(); }
-  }
-  viewer.addEventListener('click', () => closeViewer(true));
-
-  function setView(next) {
-    view = next;
-    closeViewer(true);
-    sheet.classList.toggle('on', view === 'sheet');
-    pair.classList.toggle('on', view === 'pair');
-    strips.classList.toggle('on', view === 'strips');
-    rings.classList.toggle('on', view === 'rings');
-    stage.style.display = view === 'exposure' ? '' : 'none';
-    counter.style.visibility = view === 'exposure' ? '' : 'hidden';
-    if (view === 'sheet') buildSheet();
-    else if (view === 'pair') buildPair();
-    else if (view === 'strips') buildStrips();
-    else if (view === 'rings') buildRings();
-    else render();
-    updateHint();
-  }
-
-  views.addEventListener('click', (e) => {
-    const btn = e.target.closest('.nav-btn');
-    if (!btn) return;
-    [...views.querySelectorAll('.nav-btn')].forEach((b) => b.classList.toggle('active', b === btn));
-    setView(btn.dataset.view);
+  window.addEventListener('keydown', (e) => {
+    if (openAt < 0) return;
+    if (e.key === 'Escape') { e.preventDefault(); closeViewer(); }
+    else if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') { e.preventDefault(); openViewer(openAt + 1); }
+    else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); openViewer(openAt - 1); }
   });
 
-  // ---------- side navigation ----------
-  nav.addEventListener('click', (e) => {
-    const btn = e.target.closest('.nav-btn');
-    if (!btn || !btn.dataset.cat) return;
-    [...nav.querySelectorAll('.nav-btn[data-cat]')].forEach((b) => b.classList.toggle('active', b === btn));
+  views.addEventListener('click', (e) => {
+    const btn = e.target.closest('.vbtn');
+    if (!btn) return;
+    [...views.children].forEach((b) => b.classList.toggle('active', b === btn));
+    const grid = btn.dataset.view === 'grid';
+    closeViewer();
+    sheet.classList.toggle('on', grid);
+    document.querySelector('.canvas').style.display = grid ? 'none' : '';
+    document.querySelector('.rolls').style.display = grid ? 'none' : '';
+    if (grid) buildSheet();
+  });
 
-    const cat = btn.dataset.cat;
-    pool = cat === 'all' ? all.slice() : all.filter((p) => (p.categories || []).includes(cat));
-    if (!pool.length) pool = all.slice();
-
-    layers.forEach((l) => { l.file = null; });
-    idx = Math.min(LAYERS - 1, pool.length - 1);
-    hovered = -1;
-    closeViewer(true);
-    if (view === 'sheet') buildSheet();
-    else if (view === 'pair') buildPair();
-    else if (view === 'strips') buildStrips();
-    else if (view === 'rings') buildRings();
-    else render();
-    updateHint();
+  shuffle.addEventListener('click', () => {
+    expose('a', Math.floor(Math.random() * rolls.a.items.length));
+    expose('b', Math.floor(Math.random() * rolls.b.items.length));
   });
 })();
