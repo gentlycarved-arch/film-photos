@@ -43,8 +43,7 @@ body{
   max-height:100%;
   background:#000;
   border:1px solid rgba(226,217,199,.5);
-  box-shadow:0 0 0 5px rgba(11,10,9,.9), 0 0 22px rgba(238,229,210,.05);
-  transition:box-shadow .5s ease, border-color .5s ease;
+  box-shadow:0 0 0 5px rgba(11,10,9,.9);
 }
 /* the frames themselves are clipped inside, so the border and its light can sit
    outside the picture and still travel round it */
