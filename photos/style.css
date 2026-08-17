@@ -26,6 +26,9 @@ body{
   display:flex;
   align-items:center;
   justify-content:center;
+  /* clearance along the top; the frame stays centred and is sized to clear the
+     controls rather than being pushed off to one side by them */
+  padding:58px 24px 24px;
 }
 
 /* the two chosen frames come together inside one border, so the pair reads as a
@@ -34,9 +37,10 @@ body{
 
 .pairbox{
   position:relative;
-  width:min(74vw, 1080px);
+  width:min(62vw, 980px);
+  max-width:100%;
   aspect-ratio:3 / 2;
-  max-height:calc(100vh - var(--rolls-h) - 76px);
+  max-height:100%;
   background:#000;
   border:1px solid rgba(226,217,199,.5);
   box-shadow:0 0 0 5px rgba(11,10,9,.9), 0 0 22px rgba(238,229,210,.05);
